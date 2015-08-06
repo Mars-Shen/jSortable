@@ -1,6 +1,22 @@
 # jQueryUISortable
 ## Introductions
-This is a extend from jQuery Ui Sortable http://jqueryui.com/sortable/
+This is a plugin extend from [jQuery Ui](http://jqueryui.com/sortable/) Sortable
+
+In oredr to build a sortable and editable list
+
+## What We Can Do
+* Add Item to list
+* Delete Item(s) from list
+* Edit Selected Item
+* Active/Inactive Item(s) in list
+* Json Data Format
+
+## Required
+- jQuery 1.7+
+- jQuery UI
+
+## How To
+Coming soon...
 
 
 ## Screenshot
