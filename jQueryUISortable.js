@@ -1,14 +1,9 @@
 /**
- *sortJsonData:{
-sortElementId:{
-index,
-data:[{
-id:,
-isActiveFlag:,
-value
-}]
-}
-}
+ * jQueryUISortable v0.0.1
+ * require jquery 1.7+
+ * Mars Shen August 5, 2015,
+ * MIT License
+ * for more info pls visit: https://github.com/Mars-Shen/jQueryUISortable
  */
 ;
 (function ($, window, document, undefined) {
@@ -38,14 +33,14 @@ value
 
 	//method of jQueryUISortTableBeautifier
 	SortTable.prototype = {
-		selectOneItemEnableButtonsDelegate : function () {},
-		unselectItemDisableButtonsDelegate : function () {},
-		enterEditModeButtonsStatusDelegate : function () {},
-		exitEditModeButtonsStatusDelegate : function () {},
-		enterBatchJobModeButtonStatusDelegate : function () {},
-		exitBatchJobModeButtonStatusDelegate : function () {},
-		enableBatchButtonDelegate : function () {},
-		disableBatchJobButtonDelegate : function () {},
+		selectOneItemEnableButtonsDelegate : function () {}, //Delegate, this is invoked when user select one item in our list
+		unselectItemDisableButtonsDelegate : function () {}, //Delegate, this is invoked when table is nothing selected
+		enterEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user enter edit mode
+		exitEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user exit edit mode
+		enterBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode
+		exitBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user exit batch job mode
+		enableBatchButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and check some check boxes
+		disableBatchJobButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and select nothing
 
 		init : function () {
 			//init sortable
@@ -179,7 +174,7 @@ value
 				if (!this.isBatchJob) {
 					this.selectedItem = jqObj;
 					if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
-						//Delegate, this is invoked when user select one item in our table
+						//Delegate, this is invoked when user select one item in our list
 						this.selectOneItemEnableButtonsDelegate($(this.element));
 						this.selectedItem.parent().find(".ui-state-active").removeClass("ui-state-active");
 						this.selectedItem.addClass("ui-state-active");
@@ -361,10 +356,10 @@ value
 				this.exitBatchJobModeButtonStatusDelegate($(this.element));
 			}
 			if (this.selectNumber > 0) {
-				//Delegate, this is invoked when user enter batch job mode and select nothing
+				//Delegate, this is invoked when user enter batch job mode and check some check boxes
 				this.enableBatchButtonDelegate($(this.element));
 			} else {
-				//Delegate, this is invoked when user enter batch job mode and check some check boxes
+				//Delegate, this is invoked when user enter batch job mode and select nothing
 				this.disableBatchJobButtonDelegate($(this.element));
 			}
 		},
@@ -400,7 +395,6 @@ value
 			$(this.element).find("li .li_sortable_checkbox").show();
 
 		},
-
 		/**
 		 *Exit batch job mode
 		 */
@@ -416,11 +410,21 @@ value
 		}
 	};
 
-	//interal medthod
-	var setDelegateMedthod = function (tempArguments, medthod) {
+	//interal method
+	var setDelegateMethod = function (tempArguments, method) {
 		if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
 			if (tempArguments.length > 1) {
-				tempArguments[1][medthod] = tempArguments[0];
+				tempArguments[1][method] = tempArguments[0];
+			}
+		}
+	}
+
+	var invokeMethod = function (tempArguments, method) {
+		if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
+			if (tempArguments.length > 1) {
+				return tempArguments[1][method].appy(tempArguments[1], tempArguments[0]);
+			} else {
+				return tempArguments[0][method].call(tempArguments[0]);
 			}
 		}
 	}
@@ -429,139 +433,85 @@ value
 	var methods = {
 		AcitveInactiveItems : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].activeInactiveFunction();
-				} else {
-					tempArguments[0].activeInactiveFunction();
-				}
-			}
+			invokeMethod(tempArguments, "activeInactiveFunction");
 		},
 		CancelEdit : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].calcelFunction();
-				} else {
-					tempArguments[0].calcelFunction();
-				}
-			}
+			invokeMethod(tempArguments, "calcelFunction");
 		},
 		SaveItem : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].saveFunction();
-				} else {
-					tempArguments[0].saveFunction();
-				}
-			}
+			invokeMethod(tempArguments, "saveFunction");
 		},
 		BatchMode : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].batchJobFunction();
-				} else {
-					tempArguments[0].batchJobFunction();
-				}
-			}
+			invokeMethod(tempArguments, "batchJobFunction");
 		},
 		NormalMode : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].normalModeFunction();
-				} else {
-					tempArguments[0].normalModeFunction();
-				}
-			}
+			invokeMethod(tempArguments, "normalModeFunction");
 		},
 		AddItem : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].addItemFunction();
-				} else {
-					tempArguments[0].addItemFunction();
-				}
-			}
+			invokeMethod(tempArguments, "addItemFunction");
 		},
 
 		DeleteItems : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].deleteFunction();
-				} else {
-					tempArguments[0].deleteFunction();
-				}
-			}
+			invokeMethod(tempArguments, "deleteFunction");
 		},
 
 		EditItem : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					tempArguments[1].editFunction();
-				} else {
-					tempArguments[0].editFunction();
-				}
-			}
+			invokeMethod(tempArguments, "editFunction");
 		},
 
 		GetJsonData : function () {
 			var tempArguments = arguments;
-			if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
-				if (tempArguments.length > 1) {
-					return tempArguments[1].returnModelData();
-				} else {
-					return tempArguments[0].returnModelData();
-				}
-			}
+			return invokeMethod(tempArguments, "returnModelData");
 		},
 
 		SetSelectOneItemEnableButtonsDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "selectOneItemEnableButtonsDelegate");
+			setDelegateMethod(tempArguments, "selectOneItemEnableButtonsDelegate");
 		},
 		SetUnselectItemDisableButtonsDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "unselectItemDisableButtonsDelegate");
+			setDelegateMethod(tempArguments, "unselectItemDisableButtonsDelegate");
 		},
 		SetEnterEditModeButtonsStatusDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "enterEditModeButtonsStatusDelegate");
+			setDelegateMethod(tempArguments, "enterEditModeButtonsStatusDelegate");
 		},
 		SetExitEditModeButtonsStatusDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "exitEditModeButtonsStatusDelegate");
+			setDelegateMethod(tempArguments, "exitEditModeButtonsStatusDelegate");
 		},
 		SetEnterBatchJobModeButtonStatusDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "enterBatchJobModeButtonStatusDelegate");
+			setDelegateMethod(tempArguments, "enterBatchJobModeButtonStatusDelegate");
 		},
 		SetExitBatchJobModeButtonStatusDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "exitBatchJobModeButtonStatusDelegate");
+			setDelegateMethod(tempArguments, "exitBatchJobModeButtonStatusDelegate");
 		},
 		SetEnableBatchButtonDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "enableBatchButtonDelegate");
+			setDelegateMethod(tempArguments, "enableBatchButtonDelegate");
 		},
 		SetDisableBatchJobButtonDelegate : function () {
 			var tempArguments = arguments;
-			setDelegateMedthod(tempArguments, "disableBatchJobButtonDelegate");
+			setDelegateMethod(tempArguments, "disableBatchJobButtonDelegate");
 		}
 	};
 
-	//define plugin
+	//Define plugin
 	$.fn[pluginName] = function () {
 		var tempArguments = arguments;
 		var getJsonData = null;
 		this.each(function () {
 			if (!$.data(this, "plugin_" + pluginName)) {
-				//init
+				//init plugin
 				$.data(this, "plugin_" + pluginName, new SortTable(this, tempArguments[0]));
 			} else {
 				var method = tempArguments[0];
