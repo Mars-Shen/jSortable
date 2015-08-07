@@ -343,7 +343,7 @@
 					that.deleteDataFromModel(foundRecord.id);
 					v.remove();
 				});
-				selectNumber = 0;
+				this.selectNumber = 0;
 				this.batchModeButtonStatus();
 			}
 		},
