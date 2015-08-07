@@ -66,6 +66,7 @@
 		buildSortHTML : function () {
 			var element = $(this.element);
 			element.empty();
+			element.addClass("sortable_default");
 			var activedDataTemp = this.activedData;
 			var inactivedDataTemp = this.inactivedData;
 			$.each(this.settings.sortJsonData, function (i, v) {

@@ -1,0 +1,23 @@
+.sortable_default {
+	list-style-type : none;
+	margin : 0;
+	padding : 0;
+	width : 60% ;
+}
+.sortable_default li {
+	margin : 0 5px 5px 5px;
+	padding : 5px;
+	font-size : 1.2em;
+	height : 1.5em;
+}
+html > body.sortable_default li {
+	height : 1.5em;
+	line-height : 1.2em;
+}
+.ui-state-highlight {
+	height : 1.5em;
+	line-height : 1.2em;
+}
+.hide {
+	display : none;
+}
