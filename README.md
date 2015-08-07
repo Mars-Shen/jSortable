@@ -20,7 +20,7 @@ Coming soon...
 
 
 ## Screenshot
-![Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo.gif)
+![Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo.gif)
 
 ##License
 Licensed under the MIT License
