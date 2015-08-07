@@ -22,3 +22,9 @@ Coming soon...
 ## Screenshot
 ![Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo.gif)
 
+##License
+Licensed under the MIT License
+
+##Changelog
+v0.0.1
+origin version: 5 Aug 2015
