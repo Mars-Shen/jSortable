@@ -12,13 +12,21 @@
 	var pluginName = "sorttable",
 	defaults = {
 		startIndex : 0, //start index is used when user add a new item, and we will use this start index as a part of element id.
-		sortJsonData : []//table's data array, json based. [{id:,isActiveFlag:,value}],
+		sortJsonData : [], //table's data array, json based. [{id:,isActiveFlag:,value}],
+		selectOneItemEnableButtonsDelegate : function () {}, //Delegate, this is invoked when user select one item in our list
+		unselectItemDisableButtonsDelegate : function () {}, //Delegate, this is invoked when table is nothing selected
+		enterEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user enter edit mode
+		exitEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user exit edit mode
+		enterBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode
+		exitBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user exit batch job mode
+		enableBatchButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and check some check boxes
+		disableBatchJobButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and select nothing
 
 	};
 
 	var SortTable = function (element, options) {
 		this.element = element;
-		this.settings = $.extend({}, defaults, options); //this.settings.sortJsonData is using to store source data
+		this.options = $.extend({}, defaults, options); //this.options.sortJsonData is using to store source data
 		this.activedData = [];
 		this.inactivedData = [];
 		this.selectedItem = {};
@@ -33,15 +41,6 @@
 
 	//method of jQueryUISortTableBeautifier
 	SortTable.prototype = {
-		selectOneItemEnableButtonsDelegate : function () {}, //Delegate, this is invoked when user select one item in our list
-		unselectItemDisableButtonsDelegate : function () {}, //Delegate, this is invoked when table is nothing selected
-		enterEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user enter edit mode
-		exitEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user exit edit mode
-		enterBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode
-		exitBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user exit batch job mode
-		enableBatchButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and check some check boxes
-		disableBatchJobButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and select nothing
-
 		init : function () {
 			//init sortable
 			this.buildSortHTML();
@@ -69,7 +68,7 @@
 			element.addClass("sortable_default");
 			var activedDataTemp = this.activedData;
 			var inactivedDataTemp = this.inactivedData;
-			$.each(this.settings.sortJsonData, function (i, v) {
+			$.each(this.options.sortJsonData, function (i, v) {
 				var newItem = $("<li class=\"ui-state-default\" id=\"li_sortable_item_" + v.id + "\">" +
 						"<input type=\"checkbox\" class=\"li_sortable_checkbox hide\" id=\"li_sortable_checkbox_" + v.id + "\"/>" +
 						"<input type=\"hidden\" class=\"hid_sortable_id\" id=\"hid_sortable_id_" + v.id + "\" value=\"" + v.id + "\"/>" +
@@ -105,13 +104,13 @@
 			var newRecordOrders = [];
 			var that = this;
 			$.each($(this.element).find("li .hid_sortable_id"), function (index, v) {
-				$.each(that.settings.sortJsonData, function (i, value) {
+				$.each(that.options.sortJsonData, function (i, value) {
 					if ($(v).val() == value.id) {
 						newRecordOrders.push(value);
 					}
 				});
 			});
-			this.settings.sortJsonData = newRecordOrders;
+			this.options.sortJsonData = newRecordOrders;
 		},
 
 		/**
@@ -124,7 +123,7 @@
 			var tempElement = $(this.element);
 			var activedDataTemp = this.activedData;
 			var inactivedDataTemp = this.inactivedData;
-			$.each(this.settings.sortJsonData, function (index, v) {
+			$.each(this.options.sortJsonData, function (index, v) {
 				var valueStr = $.trim(v.value);
 				var idStr = $.trim(v.id);
 				var flag = v.isActiveFlag;
@@ -153,7 +152,7 @@
 
 		returnModelData : function (sortElementId) {
 			return {
-				sortJsonData : this.settings.sortJsonData,
+				sortJsonData : this.options.sortJsonData,
 				activedData : this.activedData,
 				inactivedData : this.inactivedData
 			};
@@ -176,12 +175,12 @@
 					this.selectedItem = jqObj;
 					if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
 						//Delegate, this is invoked when user select one item in our list
-						this.selectOneItemEnableButtonsDelegate($(this.element));
+						this.options.selectOneItemEnableButtonsDelegate($(this.element));
 						this.selectedItem.parent().find(".ui-state-active").removeClass("ui-state-active");
 						this.selectedItem.addClass("ui-state-active");
 					} else {
 						//Delegate, this is invoked when table is nothing selected
-						this.unselectItemDisableButtonsDelegate($(this.element));
+						this.options.unselectItemDisableButtonsDelegate($(this.element));
 					}
 				} else {
 					this.selectedItem = null;
@@ -243,7 +242,7 @@
 		 */
 		findDataFromModel : function (recordId) {
 			var foundRecord = null;
-			$.each(this.settings.sortJsonData, function (i, v) {
+			$.each(this.options.sortJsonData, function (i, v) {
 				if (v.id == recordId) {
 					foundRecord = v;
 					return false;
@@ -268,10 +267,10 @@
 		changeEditModeButtonsStatus : function () {
 			if (this.isEditMode) {
 				//Delegate, this is invoked when user enter edit mode
-				this.enterEditModeButtonsStatusDelegate($(this.element));
+				this.options.enterEditModeButtonsStatusDelegate($(this.element));
 			} else {
 				//Delegate, this is invoked when user exit edit mode
-				this.exitEditModeButtonsStatusDelegate($(this.element));
+				this.options.exitEditModeButtonsStatusDelegate($(this.element));
 			}
 
 		},
@@ -313,14 +312,14 @@
 		 */
 		deleteDataFromModel : function (recordId) {
 			var foundRecordIndex = -1;
-			for (var i = 0; i < this.settings.sortJsonData.length; i++) {
-				if (this.settings.sortJsonData[i].id == recordId) {
+			for (var i = 0; i < this.options.sortJsonData.length; i++) {
+				if (this.options.sortJsonData[i].id == recordId) {
 					foundRecordIndex = i;
 					break;
 				}
 			}
 			if (foundRecordIndex >= 0) {
-				this.settings.sortJsonData.splice(foundRecordIndex, 1);
+				this.options.sortJsonData.splice(foundRecordIndex, 1);
 			}
 		},
 		/**
@@ -351,30 +350,30 @@
 		batchModeButtonStatus : function () {
 			if (this.isBatchJob) {
 				//Delegate, this is invoked when user enter batch job mode
-				this.enterBatchJobModeButtonStatusDelegate($(this.element));
+				this.options.enterBatchJobModeButtonStatusDelegate($(this.element));
 			} else {
 				//Delegate, this is invoked when user exit batch job mode
-				this.exitBatchJobModeButtonStatusDelegate($(this.element));
+				this.options.exitBatchJobModeButtonStatusDelegate($(this.element));
 			}
 			if (this.selectNumber > 0) {
 				//Delegate, this is invoked when user enter batch job mode and check some check boxes
-				this.enableBatchButtonDelegate($(this.element));
+				this.options.enableBatchButtonDelegate($(this.element));
 			} else {
 				//Delegate, this is invoked when user enter batch job mode and select nothing
-				this.disableBatchJobButtonDelegate($(this.element));
+				this.options.disableBatchJobButtonDelegate($(this.element));
 			}
 		},
 		/**
 		 * Add a new item to specified table
 		 */
 		addItemFunction : function () {
-			var startIndex = this.settings.startIndex;
+			var startIndex = this.options.startIndex;
 			var id = ++startIndex;
-			this.settings.sortJsonData.push(this.getOneItemJsonObj(id, false, "new value"));
+			this.options.sortJsonData.push(this.getOneItemJsonObj(id, false, "new value"));
 			var newItems = this.reflreshData();
 			this.selectItemFuction(newItems[0]);
 			this.editFunction();
-			this.settings.startIndex = id;
+			this.options.startIndex = id;
 		},
 		/**
 		 *Get a new json data
@@ -415,7 +414,7 @@
 	var setDelegateMethod = function (tempArguments, method) {
 		if (typeof tempArguments !== 'undefined' && tempArguments !== null) {
 			if (tempArguments.length > 1) {
-				tempArguments[1][method] = tempArguments[0];
+				tempArguments[1]['options'][method] = tempArguments[0];
 			}
 		}
 	}

@@ -31,35 +31,37 @@
 <input type="button" id="sortable_getValue" value="Get Value"/>
 
  <script>
-	var mockData = {
-	startIndex:4,
-	sortJsonData:[{
-			  id:1,
-			  isActiveFlag:false,
-			  value:"item 1"
-		  },{
-			  id:2,
-			  isActiveFlag:true,
-			  value:"item 2"
-		  },{
-			  id:3,
-			  isActiveFlag:false,
-			  value:"item 3"
-		  },{
-			  id:4,
-			  isActiveFlag:true,
-			  value:"item 4"
-		  }
-		  ]
-	};
+
   $(function() {
+  	var mockData = {
+  		startIndex : 4,
+  		sortJsonData : [{
+  				id : 1,
+  				isActiveFlag : false,
+  				value : "item 1"
+  			}, {
+  				id : 2,
+  				isActiveFlag : true,
+  				value : "item 2"
+  			}, {
+  				id : 3,
+  				isActiveFlag : false,
+  				value : "item 3"
+  			}, {
+  				id : 4,
+  				isActiveFlag : true,
+  				value : "item 4"
+  			}
+  		],
+  		selectOneItemEnableButtonsDelegate : selectOneItemEnableButtonsDelegate,
+  		unselectItemDisableButtonsDelegate : unselectItemDisableButtonsDelegate,
+  		enterEditModeButtonsStatusDelegate : enterEditModeButtonsStatusDelegate,
+  		exitEditModeButtonsStatusDelegate : exitEditModeButtonsStatusDelegate
+  	};
     var sortId = "sortable";
 	$("#sortable").sorttable(mockData);
 	//set Delegate method for every button
-	$("#sortable").sorttable("SetSelectOneItemEnableButtonsDelegate",selectOneItemEnableButtonsDelegate);
-	$("#sortable").sorttable("SetUnselectItemDisableButtonsDelegate",unselectItemDisableButtonsDelegate);
-	$("#sortable").sorttable("SetEnterEditModeButtonsStatusDelegate",enterEditModeButtonsStatusDelegate);
-	$("#sortable").sorttable("SetExitEditModeButtonsStatusDelegate",exitEditModeButtonsStatusDelegate);
+
 	
 	$("#sortable").sorttable("SetEnterBatchJobModeButtonStatusDelegate",enterBatchJobModeButtonStatusDelegate);
 	$("#sortable").sorttable("SetExitBatchJobModeButtonStatusDelegate",exitBatchJobModeButtonStatusDelegate);
