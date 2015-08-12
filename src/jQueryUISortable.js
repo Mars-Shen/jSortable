@@ -5,9 +5,18 @@
  * MIT License
  * for more info pls visit: https://github.com/Mars-Shen/jQueryUISortable
  */
-;
-(function ($, window, document, undefined) {
-
+;(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD (Register as an anonymous module)
+		define(['jquery',"jqueryui"], factory);
+	} else if (typeof exports === 'object') {
+		// Node/CommonJS
+		module.exports = factory(require('jquery'));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function ($){
 	// Create the defaults once
 	var pluginName = "sorttable",
 	defaults = {
@@ -536,4 +545,4 @@
 		return this;
 	};
 
-})(jQuery, window, document);
+}));

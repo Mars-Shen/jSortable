@@ -24,6 +24,7 @@ First, you need import our js and css file in your html file's head. Don't forge
   <script src="../src/jQueryUISortable.js"></script>
   <link rel="stylesheet" href="../src/jQueryUISortable.css">
 ```
+The plugin can also be loaded as AMD module.
 
 In Html page, you just need put an **\<ul\>** element and some buttons like save, cancel, batch job button.
 
