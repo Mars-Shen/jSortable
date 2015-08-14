@@ -22,20 +22,34 @@
 		var pluginName = "sorttable",
 		defaults = {
 			startIndex : 0, //start index is used when user add a new item, and we will use this start index as a part of element id.
-			sortJsonData : [], //table's data array, json based. [{id:,isActiveFlag:,value}],
-			selectOneItemEnableButtonsDelegate : function () {}, //Delegate, this is invoked when user select one item in our list
-			unselectItemDisableButtonsDelegate : function () {}, //Delegate, this is invoked when table is nothing selected
-			enterEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user enter edit mode
-			exitEditModeButtonsStatusDelegate : function () {}, //Delegate, this is invoked when user exit edit mode
-			enterBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode
-			exitBatchJobModeButtonStatusDelegate : function () {}, //Delegate, this is invoked when user exit batch job mode
-			enableBatchButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and check some check boxes
-			disableBatchJobButtonDelegate : function () {}, //Delegate, this is invoked when user enter batch job mode and select nothing
+			enableNewItem : false, //if this option is true, new item which you added will be enable. default is false.
+			sortJsonData : [], //table's data array, json based. [{id:,isActiveFlag:,value}].
+			activeButton : true, //show active/inactive button or not, default is true.
+			activeButtonText : "Active/Inactive", //text on active button.
+			//batch job group
+			batchButton : true, //show batch mode/normal button or not, default is true.
+			batchButtonText : "Batch Mode", //text on batch mode button.
+			normalModeButtonText : "Normal Mode", //text on normal mode button.
+			//edit mode group
+			editButton : true, //show edit button or not, default is true.
+			editButtonText : "Edit Item", //text on edit button.
+			saveButtonText : "save Item", //text on edit button.
+			cancelButtonText : "Cancel", //text on edit button.
 
+			addButton : true, //show add item button or not, default is true.
+			addButtonText : "Add Item", //text on add item button.
+			deleteButton : true, //show delete button or not, default is true.
+			deleteButtonText : "Delete Item", //text on delete button.
+			submitButton : true, //show submit button or not, default is true.
+			submitButtonText : "Submit", //text on submit button.
+			submitCallBack : function () {},
 		};
 
 		var SortTable = function (element, options) {
 			this.element = element;
+			this.elementId = $(element).attr("id");
+			this.ulElement = null;
+			this.buttonElements = null;
 			this.options = $.extend({}, defaults, options); //this.options.sortJsonData is using to store source data
 			this.activedData = [];
 			this.inactivedData = [];
@@ -51,6 +65,57 @@
 
 		//method of jQueryUISortTableBeautifier
 		SortTable.prototype = {
+			selectOneItemEnableButtonsDelegate : function () {
+				$("#" + this.elementId + "_editItem").removeAttr("disabled");
+				$("#" + this.elementId + "_deleteItem").removeAttr("disabled");
+				$("#" + this.elementId + "_acitveInactiveItem").removeAttr("disabled");
+			}, //Delegate, this is invoked when user select one item in our list
+			unselectItemDisableButtonsDelegate : function () {
+				$("#" + this.elementId + "_editItem").attr("disabled", "disabled");
+				$("#" + this.elementId + "_deleteItem").attr("disabled", "disabled");
+				$("#" + this.elementId + "_acitveInactiveItem").attr("disabled", "disabled");
+			}, //Delegate, this is invoked when table is nothing selected
+			enterEditModeButtonsStatusDelegate : function () {
+				$("#" + this.elementId + "_saveItem").show();
+				$("#" + this.elementId + "_cancelItem").show();
+				$("#" + this.elementId + "_editItem").hide();
+				$("#" + this.elementId + "_addItem").hide();
+				$("#" + this.elementId + "_deleteItem").hide();
+				$("#" + this.elementId + "_batchJob").hide();
+			}, //Delegate, this is invoked when user enter edit mode
+			exitEditModeButtonsStatusDelegate : function () {
+				$("#" + this.elementId + "_saveItem").hide();
+				$("#" + this.elementId + "_cancelItem").hide();
+				$("#" + this.elementId + "_editItem").show();
+				$("#" + this.elementId + "_addItem").show();
+				$("#" + this.elementId + "_deleteItem").show();
+				$("#" + this.elementId + "_batchJob").show();
+			}, //Delegate, this is invoked when user exit edit mode
+			enterBatchJobModeButtonStatusDelegate : function () {
+				$("#" + this.elementId + "_batchJob").hide();
+				$("#" + this.elementId + "_normalMode").show();
+				$("#" + this.elementId + "_addItem").hide();
+				$("#" + this.elementId + "_editItem").hide();
+				$("#" + this.elementId + "_acitveInactiveItem").removeAttr("disabled");
+				$("#" + this.elementId + "_deleteItem").removeAttr("disabled");
+				$("#" + this.elementId + "_editItem").attr("disabled", "disabled");
+			}, //Delegate, this is invoked when user enter batch job mode
+			exitBatchJobModeButtonStatusDelegate : function () {
+				$("#" + this.elementId + "_batchJob").show();
+				$("#" + this.elementId + "_normalMode").hide();
+				$("#" + this.elementId + "_editItem").show();
+				$("#" + this.elementId + "_addItem").show();
+				$("#" + this.elementId + "_acitveInactiveItem").attr("disabled", "disabled");
+				$("#" + this.elementId + "_deleteItem").attr("disabled", "disabled");
+			}, //Delegate, this is invoked when user exit batch job mode
+			enableBatchButtonDelegate : function () {
+				$("#" + this.elementId + "_acitveInactiveItem").removeAttr("disabled");
+				$("#" + this.elementId + "_deleteItem").removeAttr("disabled");
+			}, //Delegate, this is invoked when user enter batch job mode and check some check boxes
+			disableBatchJobButtonDelegate : function () {
+				$("#" + this.elementId + "_acitveInactiveItem").attr("disabled", "disabled");
+				$("#" + this.elementId + "_deleteItem").attr("disabled", "disabled");
+			}, //Delegate, this is invoked when user enter batch job mode and select nothing
 			init : function () {
 				//init sortable
 				this.buildSortHTML();
@@ -58,12 +123,48 @@
 				this.reflreshData();
 				var that = this;
 				//select item
-				$(this.element).on("click", "li", function () {
+				$(this.ulElement).on("click", "li", function () {
 					that.selectItemFuction($(this));
+				});
+				//submit button clicked
+				$(this.element).on("click", "#" + this.elementId + "_submit", function (event) {
+					that.options.submitCallBack(event);
+				});
+				//active or inactive selected item
+				$(this.element).on("click", "#" + this.elementId + "_acitveInactiveItem", function () {
+					that.activeInactiveFunction();
+				});
+				//edit item
+				$(this.element).on("click", "#" + this.elementId + "_editItem", function () {
+					that.editFunction();
+				});
+				//save item
+				$(this.element).on("click", "#" + this.elementId + "_saveItem", function () {
+					that.saveFunction();
+				});
+				//Delete item
+				$(this.element).on("click", "#" + this.elementId + "_deleteItem", function () {
+					that.deleteFunction();
+				});
+				//Cancel item
+				$(this.element).on("click", "#" + this.elementId + "_cancelItem", function () {
+					that.calcelFunction();
+				});
+				//Batch Job
+				$(this.element).on("click", "#" + this.elementId + "_batchJob", function () {
+					that.batchJobFunction();
+				});
+				//Add Item
+				$(this.element).on("click", "#" + this.elementId + "_addItem", function () {
+					that.addItemFunction();
+				});
+				//normal mode
+				$(this.element).on("click", "#" + this.elementId + "_normalMode", function () {
+					that.normalModeFunction();
 				});
 
 				//bind checkbox click event
-				$(this.element).on("click", "input[type='checkbox']", function () {
+				$(this.ulElement).on("click", "input[type='checkbox']", function () {
 					if ($(this).prop("checked")) {
 						that.selectNumber++;
 					} else {
@@ -72,10 +173,48 @@
 					that.batchModeButtonStatus();
 				});
 			},
+			getButtonHtml : function (type) {
+				var sHtml = "";
+				switch (type) {
+				case "act":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_acitveInactiveItem\" disabled=\"disabled\" value=\"" + this.options.activeButtonText + "\"/>";
+					break;
+				case "bat":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_batchJob\"  value=\"" + this.options.batchButtonText + "\"/>";
+					break;
+				case "nol":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_normalMode\" class=\"hide\" value=\"" + this.options.normalModeButtonText + "\"/>";
+					break;
+				case "edi":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_editItem\" disabled=\"disabled\" value=\"" + this.options.editButtonText + "\"/>";
+					break;
+				case "sav":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_saveItem\" class=\"hide\" value=\"" + this.options.saveButtonText + "\"/>";
+					break;
+				case "can":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_cancelItem\" class=\"hide\" value=\"" + this.options.cancelButtonText + "\"/>";
+					break;
+				case "add":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_addItem\" value=\"" + this.options.addButtonText + "\"/>";
+					break;
+				case "del":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_deleteItem\" disabled=\"disabled\" value=\"" + this.options.deleteButtonText + "\"/>";
+					break;
+				case "sub":
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_submit\" value=\"" + this.options.submitButtonText + "\"/>";
+					break;
+				default:
+					break;
+				}
+				return sHtml;
+			},
 			buildSortHTML : function () {
 				var element = $(this.element);
-				element.empty();
-				element.addClass("sortable_default");
+				var ulElement = $("<ul id=\"ul_" + this.elementId + "\"></ul>");
+				this.ulElement = ulElement;
+				element.append(ulElement);
+				ulElement.empty();
+				ulElement.addClass("sortable_default");
 				var activedDataTemp = this.activedData;
 				var inactivedDataTemp = this.inactivedData;
 				$.each(this.options.sortJsonData, function (i, v) {
@@ -90,13 +229,37 @@
 					} else {
 						inactivedDataTemp.push(v);
 					}
-					element.append(newItem);
+					ulElement.append(newItem);
 				});
+				var buttonElements = $("<div id=\"buttons_" + this.elementId + "\">");
+				this.buttonElements = buttonElements;
+				element.append(buttonElements);
+				if (this.options.activeButton) {
+					buttonElements.append($(this.getButtonHtml("act")));
+				}
+				if (this.options.batchButton) {
+					buttonElements.append($(this.getButtonHtml("bat")));
+					buttonElements.append($(this.getButtonHtml("nol")));
+				}
+				if (this.options.editButton) {
+					buttonElements.append($(this.getButtonHtml("edi")));
+					buttonElements.append($(this.getButtonHtml("sav")));
+					buttonElements.append($(this.getButtonHtml("can")));
+				}
+				if (this.options.addButton) {
+					buttonElements.append($(this.getButtonHtml("add")));
+				}
+				if (this.options.deleteButton) {
+					buttonElements.append($(this.getButtonHtml("del")));
+				}
+				if (this.options.submitButton) {
+					buttonElements.append($(this.getButtonHtml("sub")));
+				}
 			},
 
 			buildSortTable : function () {
 				var that = this;
-				$(this.element).sortable({
+				$(this.ulElement).sortable({
 					placeholder : "ui-state-highlight",
 					axis : "y",
 					cursor : "s-resize",
@@ -107,13 +270,16 @@
 						ui.item.removeAttr("style");
 					}
 				});
-				$(this.element).disableSelection();
+				$(this.ulElement).disableSelection();
 			},
 
+			/**
+			/* record new order in list and update the data source
+			 */
 			recordNewOrder : function () {
 				var newRecordOrders = [];
 				var that = this;
-				$.each($(this.element).find("li .hid_sortable_id"), function (index, v) {
+				$.each($(this.ulElement).find("li .hid_sortable_id"), function (index, v) {
 					$.each(that.options.sortJsonData, function (i, value) {
 						if ($(v).val() == value.id) {
 							newRecordOrders.push(value);
@@ -130,7 +296,7 @@
 				this.activedData = [];
 				this.inactivedData = [];
 				var newAddedItems = [];
-				var tempElement = $(this.element);
+				var tempElement = $(this.ulElement);
 				var activedDataTemp = this.activedData;
 				var inactivedDataTemp = this.inactivedData;
 				$.each(this.options.sortJsonData, function (index, v) {
@@ -170,10 +336,10 @@
 
 			reflreshItemsDisplay : function () {
 				//enable these Items.
-				$(this.element).sortable("option", "items", "li:not(.ui-state-disabled)");
+				$(this.ulElement).sortable("option", "items", "li:not(.ui-state-disabled)");
 				//disable these Items
-				$(this.element).sortable("option", "cancel", ".ui-state-disabled,input");
-				$(this.element).sortable("refresh");
+				$(this.ulElement).sortable("option", "cancel", ".ui-state-disabled,input");
+				$(this.ulElement).sortable("refresh");
 			},
 
 			/**
@@ -185,16 +351,16 @@
 						this.selectedItem = jqObj;
 						if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
 							//Delegate, this is invoked when user select one item in our list
-							this.options.selectOneItemEnableButtonsDelegate($(this.element));
+							this.selectOneItemEnableButtonsDelegate();
 							this.selectedItem.parent().find(".ui-state-active").removeClass("ui-state-active");
 							this.selectedItem.addClass("ui-state-active");
 						} else {
 							//Delegate, this is invoked when table is nothing selected
-							this.options.unselectItemDisableButtonsDelegate($(this.element));
+							this.unselectItemDisableButtonsDelegate();
 						}
 					} else {
 						this.selectedItem = null;
-						$(this.element).find(".ui-state-active").removeClass("ui-state-active");
+						$(this.ulElement).find(".ui-state-active").removeClass("ui-state-active");
 					}
 				}
 			},
@@ -277,10 +443,10 @@
 			changeEditModeButtonsStatus : function () {
 				if (this.isEditMode) {
 					//Delegate, this is invoked when user enter edit mode
-					this.options.enterEditModeButtonsStatusDelegate($(this.element));
+					this.enterEditModeButtonsStatusDelegate();
 				} else {
 					//Delegate, this is invoked when user exit edit mode
-					this.options.exitEditModeButtonsStatusDelegate($(this.element));
+					this.exitEditModeButtonsStatusDelegate();
 				}
 
 			},
@@ -360,17 +526,17 @@
 			batchModeButtonStatus : function () {
 				if (this.isBatchJob) {
 					//Delegate, this is invoked when user enter batch job mode
-					this.options.enterBatchJobModeButtonStatusDelegate($(this.element));
+					this.enterBatchJobModeButtonStatusDelegate();
 				} else {
 					//Delegate, this is invoked when user exit batch job mode
-					this.options.exitBatchJobModeButtonStatusDelegate($(this.element));
+					this.exitBatchJobModeButtonStatusDelegate();
 				}
 				if (this.selectNumber > 0) {
 					//Delegate, this is invoked when user enter batch job mode and check some check boxes
-					this.options.enableBatchButtonDelegate($(this.element));
+					this.enableBatchButtonDelegate();
 				} else {
 					//Delegate, this is invoked when user enter batch job mode and select nothing
-					this.options.disableBatchJobButtonDelegate($(this.element));
+					this.disableBatchJobButtonDelegate();
 				}
 			},
 			/**
@@ -378,6 +544,10 @@
 			 */
 			addItemFunction : function () {
 				var startIndex = this.options.startIndex;
+				//mark sure startIndex is larger than the length of sortJsonData
+				if(startIndex < this.options.sortJsonData.length){
+					startIndex = this.options.sortJsonData.length;
+				}
 				var id = ++startIndex;
 				this.options.sortJsonData.push(this.getOneItemJsonObj(id, false, "new value"));
 				var newItems = this.reflreshData();
@@ -441,77 +611,13 @@
 
 		//plugin method
 		var methods = {
-			AcitveInactiveItems : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "activeInactiveFunction");
-			},
-			CancelEdit : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "calcelFunction");
-			},
-			SaveItem : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "saveFunction");
-			},
-			BatchMode : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "batchJobFunction");
-			},
-			NormalMode : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "normalModeFunction");
-			},
-			AddItem : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "addItemFunction");
-			},
-
-			DeleteItems : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "deleteFunction");
-			},
-
-			EditItem : function () {
-				var tempArguments = arguments;
-				invokeMethod(tempArguments, "editFunction");
-			},
-
 			GetJsonData : function () {
 				var tempArguments = arguments;
 				return invokeMethod(tempArguments, "returnModelData");
 			},
-
-			SetSelectOneItemEnableButtonsDelegate : function () {
+			SubmitCallback : function () {
 				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "selectOneItemEnableButtonsDelegate");
-			},
-			SetUnselectItemDisableButtonsDelegate : function () {
-				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "unselectItemDisableButtonsDelegate");
-			},
-			SetEnterEditModeButtonsStatusDelegate : function () {
-				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "enterEditModeButtonsStatusDelegate");
-			},
-			SetExitEditModeButtonsStatusDelegate : function () {
-				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "exitEditModeButtonsStatusDelegate");
-			},
-			SetEnterBatchJobModeButtonStatusDelegate : function () {
-				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "enterBatchJobModeButtonStatusDelegate");
-			},
-			SetExitBatchJobModeButtonStatusDelegate : function () {
-				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "exitBatchJobModeButtonStatusDelegate");
-			},
-			SetEnableBatchButtonDelegate : function () {
-				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "enableBatchButtonDelegate");
-			},
-			SetDisableBatchJobButtonDelegate : function () {
-				var tempArguments = arguments;
-				setDelegateMethod(tempArguments, "disableBatchJobButtonDelegate");
+				setDelegateMethod(tempArguments, "submitCallBack");
 			}
 		};
 
