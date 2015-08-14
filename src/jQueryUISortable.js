@@ -23,6 +23,7 @@
 		defaults = {
 			startIndex : 0, //start index is used when user add a new item, and we will use this start index as a part of element id.
 			enableNewItem : false, //if this option is true, new item which you added will be enable. default is false.
+			defaultNewItemText : "new value", //default new item text
 			sortJsonData : [], //table's data array, json based. [{id:,isActiveFlag:,value}].
 			activeButton : true, //show active/inactive button or not, default is true.
 			activeButtonText : "Active/Inactive", //text on active button.
@@ -549,7 +550,7 @@
 					startIndex = this.options.sortJsonData.length;
 				}
 				var id = ++startIndex;
-				this.options.sortJsonData.push(this.getOneItemJsonObj(id, false, "new value"));
+				this.options.sortJsonData.push(this.getOneItemJsonObj(id, this.options.enableNewItem, this.options.defaultNewItemText));
 				var newItems = this.reflreshData();
 				this.selectItemFuction(newItems[0]);
 				this.editFunction();
