@@ -26,22 +26,13 @@ First, you need import our js and css file in your html file's head. Don't forge
 ```
 The plugin can also be loaded as AMD module.
 
-In Html page, you just need put an **\<ul\>** element and some buttons like save, cancel, batch job button.
+In Html page, you just need put an **\<div\>** element! That's all!
 
 Html code snippet from demo:
 ```html
   some codes ...
-  <ul id="sortable">
-  </ul>
-  <input type="button" id="sortable_acitveInactiveItem" disabled="disabled" value="Active/Inactive"/>
-  <input type="button" id="sortable_batchJob"  value="Batch Job"/>
-  <input type="button" id="sortable_normalMode" class="hide" value="Normal Mode"/>
-  <input type="button" id="sortable_editItem" disabled="disabled" value="Edit Item"/>
-  <input type="button" id="sortable_saveItem" class="hide" value="Save Item"/>
-  <input type="button" id="sortable_cancelItem" class="hide" value="Cancel"/>
-  <input type="button" id="sortable_addItem" value="Add Item"/>
-  <input type="button" id="sortable_deleteItem" disabled="disabled" value="Delete Item"/>
-  <input type="button" id="sortable_getValue" value="Get Value"/>
+  <div id="sortable">
+  </div>
   other codes ...
 ```
 
@@ -49,7 +40,7 @@ Html code snippet from demo:
 ```JavaScript
 $("#sortable").sorttable(options);
 ```
-Here, *options* is a json string
+Here, *options* is a json string, it looks like this:
 ```JSON5
 var options = {
   		startIndex : 4, //start index is used when user add a new item, and we will use this start index as a part of element id.
@@ -74,68 +65,57 @@ var options = {
   		]
   	};
 ```
-#### After these step, you shoud set a delegate for your buttons.
-```javascript
-  //set a button delegate
-  $("#sortable").sorttable("SetEnableBatchButtonDelegate",enableBatchButtonDelegate);
-   //in this custom function, you need implement when and how to show your button.
-  function enableBatchButtonDelegate(sortElement) {
-  	var sortElementId = sortElement.attr("id");
-  	//in this function, it means when you enter batch mode and select some items, you should make active button activation.
-  	$("#" + sortElementId + "_acitveInactiveItem").removeAttr("disabled"); 
-  	$("#" + sortElementId + "_deleteItem").removeAttr("disabled");
-  }
-```
-There are 8 delegate need to be set.
-```javascript
-  //set a button delegate
-  $("#sortable").sorttable("name",function);
-```
-| Name  | Description |
-| :------------ |:------------|
-|selectOneItemEnableButtonsDelegate |Delegate, this is invoked when user select one item in our list|
-|unselectItemDisableButtonsDelegate |Delegate, this is invoked when table is nothing selected|
-|enterEditModeButtonsStatusDelegate |Delegate, this is invoked when user enter edit mode|
-|exitEditModeButtonsStatusDelegate |Delegate, this is invoked when user exit edit mode|
-|enterBatchJobModeButtonStatusDelegate |Delegate, this is invoked when user enter batch job mode|
-|exitBatchJobModeButtonStatusDelegate |Delegate, this is invoked when user exit batch job mode|
-|enableBatchButtonDelegate |Delegate, this is invoked when user enter batch job mode and check some check boxes|
-|disableBatchJobButtonDelegate |Delegate, this is invoked when user enter batch job mode and select nothing|
+This form show all options:
 
-Also, you can set these delegates when plugin initialize, just like:
-```JSON5
-var options = {
-  		//other codes ...
-  		selectOneItemEnableButtonsDelegate : selectOneItemEnableButtonsDelegate,
-  		unselectItemDisableButtonsDelegate : unselectItemDisableButtonsDelegate,
-  		enterEditModeButtonsStatusDelegate : enterEditModeButtonsStatusDelegate,
-  		exitEditModeButtonsStatusDelegate : exitEditModeButtonsStatusDelegate
-  		//other codes ...
-  	};
-```
-#### You need bind you own click event to your buttons.
+| Name  | Description |Default|
+| :------------ |:------------|:------------|
+|startIndex| When user add a new item, this start index will be as a part of element id.| 0 |
+|enableNewItem| if this option is true, new item which you added will be enable as default. | false |
+|defaultNewItemText| Default new item value | "new value" |
+|sortJsonData| List's source data array, json based. [{id:,isActiveFlag:,value}].| [] |
+|activeButton| Show active/inactive button or not. | true |
+|activeButtonText| Default text on active button. | "Active/Inactive" |
+|batchButton| Show batch mode/normal button or not. | true |
+|batchButtonText| Default text on batch mode button. | "Batch Mode" |
+|normalModeButtonText| Default text on normal mode button. | "Normal Mode" |
+|editButton| Show edit button or not. | true |
+|editButtonText| Default text on edit button. | "Edit Item" |
+|saveButtonText| Default text on save button. | "Save Item" |
+|cancelButtonText| Default text on cancel button. | "Cancel" |
+|addButton| Show add item button or not. | true |
+|addButtonText| Default text on add item button. | "Add Item" |
+|deleteButton| Show delete button or not. | true |
+|deleteButtonText| Default text on delete button. | "Delete Item" |
+|submitButton| Show submit button or not. | true |
+|submitButtonText| Default text on submit button. | "Submit" |
+|submitCallBack| Submit button callback. | function(){} |
+
+#### After these step, you can set a callback for your buttons.
 ```javascript
-  //active or inactive selected item
-	$("#sortable_acitveInactiveItem").click(function(){
-	  //tirgger active item atcion.
-		$("#sortable").sorttable("AcitveInactiveItems");
+sortObj.sorttable("SubmitCallback", function () {
+	var str = "";
+	var obj = sortObj.sorttable("GetJsonData");
+	$.each(obj.sortJsonData, function (i, v) {
+		str += v.id + " is " + v.isActiveFlag + " its value is " + v.value + ".\n ";
 	});
+   	alert(str);
+});
 ```
-There are 8 event can be binded.
-```javascript
-  //set a button delegate
-  $("#sortable").sorttable("actionname");
+There are just 2 medthod you can inovke right now.
+
+| Name  | Description |Arguments|
+| :------------ |:------------|:------------|
+|GetJsonData|Return list's data in a json format ||
+|SubmitCallback|Submit button callback|function|
+
+Json based data from GetJsonData medthod:
+```json5
+	{
+		sortJsonData : [{id:,isActiveFlag:,value}],//list's data source array, json based.
+		activedData : [],//active data in list
+		inactivedData : []//inactiva data in list
+	};
 ```
-| Action Name  | Description |
-| :------------ |:------------|
-|AcitveInactiveItems |Action, active user selected item|
-|EditItem |Action, edit user selected item|
-|SaveItem |Action, save user selected item|
-|DeleteItems |Action, delete user selected item|
-|CancelEdit |Action, cancel user's editing in edit mode|
-|BatchMode |Action, enter batch mode|
-|AddItem |Action, add a new record|
-|NormalMode |Action, exit batch mode|
 
 #### Demo
 
