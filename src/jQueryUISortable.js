@@ -210,8 +210,12 @@
 				}
 				return sHtml;
 			},
+			/*
+			*prepare to init jquery ui sortable 
+			*/
 			buildSortHTML : function () {
 				var element = $(this.element);
+				//add ul element
 				var ulElement = $("<ul id=\"ul_" + this.elementId + "\"></ul>");
 				this.ulElement = ulElement;
 				element.append(ulElement);
@@ -219,20 +223,7 @@
 				ulElement.addClass("sortable_default");
 				var activedDataTemp = this.activedData;
 				var inactivedDataTemp = this.inactivedData;
-				$.each(this.options.sortJsonData, function (i, v) {
-					var newItem = $("<li class=\"ui-state-default\" id=\"li_sortable_item_" + v.id + "\">" +
-							"<input type=\"checkbox\" class=\"li_sortable_checkbox hide\" id=\"li_sortable_checkbox_" + v.id + "\"/>" +
-							"<input type=\"hidden\" class=\"hid_sortable_id\" id=\"hid_sortable_id_" + v.id + "\" value=\"" + v.id + "\"/>" +
-							"<input type=\"text\" class=\"hid_sortable_value hide\" id=\"hid_sortable_value_" + v.id + "\" value=\"" + v.value + "\"/>" +
-							"<span class=\"sortable_read_only_text\">" + v.value + "</span>" +
-							"</li>");
-					if (v.isActiveFlag) {
-						activedDataTemp.push(v);
-					} else {
-						inactivedDataTemp.push(v);
-					}
-					ulElement.append(newItem);
-				});
+				//add buttons group div element
 				var buttonElements = $("<div id=\"buttons_" + this.elementId + "\">");
 				this.buttonElements = buttonElements;
 				element.append(buttonElements);
@@ -258,7 +249,9 @@
 					buttonElements.append($(this.getButtonHtml("sub")));
 				}
 			},
-
+			/*
+			*init jquery ui sortable
+			*/
 			buildSortTable : function () {
 				var that = this;
 				$(this.ulElement).sortable({
@@ -315,6 +308,7 @@
 								"</li>");
 						tempElement.append(newItem);
 						newAddedItems.push(newItem);
+						jqObj = $("#li_sortable_item_" + idStr);
 					}
 					if (flag) {
 						activedDataTemp.push($("#li_sortable_item_" + idStr));
