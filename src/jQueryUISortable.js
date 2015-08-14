@@ -20,6 +20,7 @@
 }(function ($){
 		// Create the defaults once
 		var pluginName = "sorttable",
+		version = "v0.0.1",
 		defaults = {
 			startIndex : 0, //start index is used when user add a new item, and we will use this start index as a part of element id.
 			enableNewItem : false, //if this option is true, new item which you added will be enable. default is false.
@@ -34,8 +35,8 @@
 			//edit mode group
 			editButton : true, //show edit button or not, default is true.
 			editButtonText : "Edit Item", //text on edit button.
-			saveButtonText : "save Item", //text on edit button.
-			cancelButtonText : "Cancel", //text on edit button.
+			saveButtonText : "save Item", //text on save button.
+			cancelButtonText : "Cancel", //text on cancel button.
 
 			addButton : true, //show add item button or not, default is true.
 			addButtonText : "Add Item", //text on add item button.
@@ -43,7 +44,7 @@
 			deleteButtonText : "Delete Item", //text on delete button.
 			submitButton : true, //show submit button or not, default is true.
 			submitButtonText : "Submit", //text on submit button.
-			submitCallBack : function () {},
+			submitCallBack : function () {}, //submit button callback.
 		};
 
 		var SortTable = function (element, options) {
@@ -60,9 +61,9 @@
 			this.selectNumber = 0;
 			this._defaults = defaults;
 			this._name = pluginName;
-			this.version = 'v0.0.1';
+			this._version = version;
 			this.init();
-		}
+		};
 
 		//method of jQueryUISortTableBeautifier
 		SortTable.prototype = {
