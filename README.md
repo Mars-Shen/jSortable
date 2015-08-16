@@ -40,7 +40,7 @@ Html code snippet from demo:
 ```JavaScript
 $("#sortable").sorttable(options);
 ```
-Here, *options* is a json string, it looks like this:
+Here, `options` is a json string, it looks like this:
 ```JSON5
 var options = {
 		defaultNewItemText:"New Item",
@@ -109,7 +109,7 @@ There are just 2 medthod you can inovke right now.
 |ModelData|Get or reset list's options in a json format ||
 |SubmitCallback|Submit button callback|function|
 
-Json based data from GetJsonData medthod:
+Json based data from `ModelData` medthod:
 ```json5
 	{
 		sortJsonData : [{key:,isActiveFlag:,value}],//list's data source array, json based.
@@ -117,7 +117,7 @@ Json based data from GetJsonData medthod:
 		inactivedData : []//inactiva data in list
 	};
 ```
-You can aslo reset the *options* source into this plugin,
+You can aslo reset the `options` source into this plugin,
 ```javascript
 	sortObj.sorttable("ModelData",options);
 ```
