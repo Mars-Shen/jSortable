@@ -22,11 +22,11 @@
 	var pluginName = "sorttable",
 		version = "v0.0.1",
 		defaults = {
-			keyValueMode: true, //use this plugin in key value mode.
+			keyValueMode: true, //Make this plugin in key value mode or not.
 			enableNewItem: false, //if this option is true, new item which you added will be enable. default is false.
-			defaultNewItemKey: "NK", //default new item key
-			defaultNewItemText: "new value", //default new item text
-			sortJsonData: [], //table's data array, json based. [{id:,isActiveFlag:,value}].
+			defaultNewItemKey: "NK", //default new item's key
+			defaultNewItemText: "new value", //default new item's value
+			sortJsonData: [], //table's data array, json based. [{key:,isActiveFlag:,value}].
 			activeButton: true, //show active/inactive button or not, default is true.
 			activeButtonText: "Active/Inactive", //text on active button.
 			//batch job group
