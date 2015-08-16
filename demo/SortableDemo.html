@@ -23,44 +23,43 @@
 
 
  <script>
-
-  $(function () {
-		var mockData = {
-			sortJsonData : [{
-					id : 1,
-					isActiveFlag : false,
-					value : "item 1"
-				}, {
-					id : 2,
-					isActiveFlag : true,
-					value : "item 2"
-				}, {
-					id : 3,
-					isActiveFlag : false,
-					value : "item 3"
-				}, {
-					id : 4,
-					isActiveFlag : true,
-					value : "item 4"
-				},
-				{
-					id : 5,
-					isActiveFlag : true,
-					value : "item 5"
-				}
-			]
-		};
-		var sortObj = $("#sortable").sorttable(mockData);
-		//set submit callback function
-		sortObj.sorttable("SubmitCallback", function () {
-			var str = "";
-			var obj = sortObj.sorttable("GetJsonData");
-			$.each(obj.sortJsonData, function (i, v) {
-				str += v.id + " is " + v.isActiveFlag + " its value is " + v.value + ".\n ";
+	  $(function () {
+			var mockData = {
+				sortJsonData : [{
+						key : 1,
+						isActiveFlag : false,
+						value : "item 1"
+					}, {
+						key : 2,
+						isActiveFlag : true,
+						value : "item 2"
+					}, {
+						key : 3,
+						isActiveFlag : false,
+						value : "item 3"
+					}, {
+						key : 4,
+						isActiveFlag : true,
+						value : "item 4"
+					},
+					{
+						key : 5,
+						isActiveFlag : true,
+						value : "item 5"
+					}
+				]
+			};
+			var sortObj = $("#sortable").sorttable(mockData);
+			//set submit callback function
+			sortObj.sorttable("SubmitCallback", function () {
+				var str = "";
+				var obj = sortObj.sorttable("ModelData");
+				$.each(obj.sortJsonData, function (i, v) {
+					str += "Record " + v.id + "'s status is " + v.isActiveFlag + "(key: "+ v.key +", value: " + v.value + ").\n ";
+				});
+				alert(str);
 			});
-			alert(str);
 		});
-	});
   </script>
  
 </body>
