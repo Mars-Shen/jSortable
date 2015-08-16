@@ -43,8 +43,8 @@ $("#sortable").sorttable(options);
 Here, *options* is a json string, it looks like this:
 ```JSON5
 var options = {
-  		startIndex : 4, //start index is used when user add a new item, and we will use this start index as a part of element id.
-  		sortJsonData :  //list's data source array, json based. [{id:,isActiveFlag:,value}],
+		defaultNewItemText:"New Item",
+  		sortJsonData :  //list's data source array, json based. [{key:,isActiveFlag:,value}],
   		[{
   				id : 1,                 //unique id
   				isActiveFlag : false,   //active flag
@@ -69,9 +69,10 @@ This form show all options:
 
 | Name  | Description |Default|
 | :------------ |:------------|:------------|
-|startIndex| When user add a new item, this start index will be as a part of element id.| 0 |
+|keyValueMode| Make this plugin in key value mode or not.| true |
 |enableNewItem| if this option is true, new item which you added will be enable as default. | false |
-|defaultNewItemText| Default new item value | "new value" |
+|defaultNewItemKey| Default new item's key | "NK" |
+|defaultNewItemText| Default new item's value | "new value" |
 |sortJsonData| List's source data array, json based. [{id:,isActiveFlag:,value}].| [] |
 |activeButton| Show active/inactive button or not. | true |
 |activeButtonText| Default text on active button. | "Active/Inactive" |
@@ -94,9 +95,9 @@ This form show all options:
 ```javascript
 sortObj.sorttable("SubmitCallback", function () {
 	var str = "";
-	var obj = sortObj.sorttable("GetJsonData");
+	var obj = sortObj.sorttable("ModelData");
 	$.each(obj.sortJsonData, function (i, v) {
-		str += v.id + " is " + v.isActiveFlag + " its value is " + v.value + ".\n ";
+		str += "Record " + v.id + "'s status is " + v.isActiveFlag + "(key: "+ v.key +", value: " + v.value + ").\n ";
 	});
    	alert(str);
 });
@@ -105,16 +106,20 @@ There are just 2 medthod you can inovke right now.
 
 | Name  | Description |Arguments|
 | :------------ |:------------|:------------|
-|GetJsonData|Return list's data in a json format ||
+|ModelData|Get or reset list's options in a json format ||
 |SubmitCallback|Submit button callback|function|
 
 Json based data from GetJsonData medthod:
 ```json5
 	{
-		sortJsonData : [{id:,isActiveFlag:,value}],//list's data source array, json based.
+		sortJsonData : [{key:,isActiveFlag:,value}],//list's data source array, json based.
 		activedData : [],//active data in list
 		inactivedData : []//inactiva data in list
 	};
+```
+You can aslo reset the *options* source into this plugin,
+```javascript
+	sortObj.sorttable("ModelData",options);
 ```
 
 #### Demo
