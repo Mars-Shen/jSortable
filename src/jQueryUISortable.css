@@ -2,7 +2,16 @@
 	list-style-type : none;
 	margin : 0;
 	padding : 0;
-	width : 60% ;
+	width : 40% ;
+	border: 1px solid #eee;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 20px;
+    overflow: auto;
+    height: 290px;
 }
 .sortable_default li {
 	margin : 0 5px 5px 5px;
@@ -20,4 +29,20 @@ html > body.sortable_default li {
 }
 .hide {
 	display : none;
+}
+.sortable_text_key{
+	width : 20% ;
+}
+.sortable_text_value{
+	width : 40% ;
+}
+/*
+*css for button group
+*/
+.sortable_button_default{
+
+}
+.sortable_div_default{
+	width:600px;
+	height: 300px;
 }

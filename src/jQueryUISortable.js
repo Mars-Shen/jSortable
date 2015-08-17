@@ -22,6 +22,7 @@
 	var pluginName = "sorttable",
 		version = "v0.0.1",
 		defaults = {
+			groupMode: true, //Group active and inactive items in two groups.
 			keyValueMode: true, //Make this plugin in key value mode or not.
 			enableNewItem: false, //if this option is true, new item which you added will be enable. default is false.
 			defaultNewItemKey: "NK", //default new item's key
@@ -51,8 +52,10 @@
 	var SortTable = function(element, options) {
 		this.element = element;
 		this.elementId = $(element).attr("id");
+		this.disableUlElement = null;
 		this.ulElement = null;
 		this.buttonElements = null;
+		this.sortableObj = null;
 		this.startIndex = 0;
 		this.options = $.extend({}, defaults, options); //this.options.sortJsonData is using to store source data
 		this.activedData = [];
@@ -77,8 +80,8 @@
 			this.refreshData();
 			var that = this;
 			//select item
-			$(this.ulElement).on("click", "li", function() {
-				that.selectItemFuction($(this));
+			$(this.element).on("click", "li", function() {
+				that.selectItemFunction($(this));
 			});
 			//submit button clicked
 			$(this.element).on("click", "#" + this.elementId + "_submit", function(event) {
@@ -118,7 +121,7 @@
 			});
 
 			//bind checkbox click event
-			$(this.ulElement).on("click", "input[type='checkbox']", function() {
+			$(this.element).on("click", "input[type='checkbox']", function() {
 				if ($(this).prop("checked")) {
 					that.selectNumber++;
 				} else {
@@ -132,17 +135,30 @@
 		 */
 		buildSortHTML: function() {
 			var element = $(this.element);
+			element.empty();
 			//add ul element
+			var divElement = $("<div class=\"sortable_div_default\" id=\"div_" + this.elementId + "\"></div>");
 			var ulElement = $("<ul id=\"ul_" + this.elementId + "\"></ul>");
 			this.ulElement = ulElement;
-			element.append(ulElement);
+			element.append(divElement);
+			divElement.append(ulElement);
 			ulElement.empty();
 			ulElement.addClass("sortable_default");
+			ulElement.addClass("sortable_connectedSortable_" + this.elementId);
+			if (this.options.groupMode) {
+				var disableUlElement = $("<ul id=\"ul_disable_" + this.elementId + "\"></ul>");
+				this.disableUlElement = disableUlElement;
+				disableUlElement.empty();
+				disableUlElement.addClass("sortable_default");
+				disableUlElement.addClass("sortable_connectedSortable_" + this.elementId);
+				divElement.append(disableUlElement);
+			}
 			var activedDataTemp = this.activedData;
 			var inactivedDataTemp = this.inactivedData;
 			//add buttons group div element
 			var buttonElements = $("<div id=\"buttons_" + this.elementId + "\">");
 			this.buttonElements = buttonElements;
+			buttonElements.addClass("sortable_button_default");
 			element.append(buttonElements);
 			if (this.options.activeButton) {
 				buttonElements.append($(this.getButtonHtml("act")));
@@ -171,19 +187,32 @@
 		 *init jquery ui sortable
 		 */
 		buildSortTable: function() {
+			if (typeof this.sortableObj !== 'undefined' && this.sortableObj !== null) {
+				// this.sortableObj.sortable( "destroy" );
+				this.sortableObj = null;
+			}
 			var that = this;
-			$(this.ulElement).sortable({
+			var argOptions = {
 				placeholder: "ui-state-highlight",
 				axis: "y",
 				cursor: "s-resize",
 				opacity: 0.8,
 				stop: function(event, ui) {
-					that.recordNewOrder();
+					if (!that.options.groupMode) {
+						that.recordNewOrder();
+					}
 					that.refreshData();
 					ui.item.removeAttr("style");
 				}
-			});
-			$(this.ulElement).disableSelection();
+			}
+			if (this.options.groupMode) {
+				argOptions["connectWith"] = ".sortable_connectedSortable_" + this.elementId;
+				this.sortableObj = $(".sortable_connectedSortable_" + this.elementId).sortable(argOptions);
+			} else {
+				this.sortableObj = $(this.ulElement).sortable(argOptions);
+			}
+
+			this.sortableObj.disableSelection();
 		},
 
 		/**
@@ -192,9 +221,11 @@
 		recordNewOrder: function() {
 			var newRecordOrders = [];
 			var that = this;
-			$.each($(this.ulElement).find("li .hid_sortable_id"), function(index, v) {
+			var index = 0;
+			$.each($(this.element).find("li .hid_sortable_id"), function(index, v) {
 				$.each(that.options.sortJsonData, function(i, value) {
 					if ($(v).val() == value.id) {
+						value.index = index++;
 						newRecordOrders.push(value);
 					}
 				});
@@ -219,17 +250,17 @@
 				var keyStr = $.trim(v.key);
 				var idStr = $.trim(v.id);
 				var flag = v.isActiveFlag;
-				var jqObj = $("#li_sortable_item_" + that.elementId + "_" + idStr);
+				var jqObj = $(that.element).find("#li_sortable_item_" + that.elementId + "_" + idStr);
 				if (jqObj.length == 0) {
 					var newItem = $("<li class=\"ui-state-default\" id=\"li_sortable_item_" + that.elementId + "_" + idStr + "\">" +
 						"<input type=\"checkbox\" class=\"li_sortable_checkbox hide\" id=\"li_sortable_checkbox_" + idStr + "\"/>" +
 						"<input type=\"hidden\" class=\"hid_sortable_id\" id=\"hid_sortable_id_" + idStr + "\" value=\"" + idStr + "\"/>" +
 						"<span class=\"sortable_read_only_text\">" + that.getKeyValueString(keyStr, valueStr) + "</span>" +
-						"<span class=\"sortable_edit_text hide\">" + that.getKeyValueString("<input type=\"text\" class=\"hid_sortable_key\" id=\"hid_sortable_key_" + idStr + "\" value=\"" + keyStr + "\"/>", "<input type=\"text\" class=\"hid_sortable_value\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/>") + "</span>" +
+						"<span class=\"sortable_edit_text hide\">" + that.getKeyValueString("<input type=\"text\" class=\"hid_sortable_key sortable_text_key\" id=\"hid_sortable_key_" + idStr + "\" value=\"" + keyStr + "\"/>", "<input type=\"text\" class=\"hid_sortable_value sortable_text_value\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/>") + "</span>" +
 						"</li>");
 					tempElement.append(newItem);
 					newAddedItems.push(newItem);
-					jqObj = $("#li_sortable_item_" + that.elementId + "_" + idStr);
+					jqObj = $(that.element).find("#li_sortable_item_" + that.elementId + "_" + idStr);
 				}
 				//make sure value is up to data
 				var itemValueObj = jqObj.find(".hid_sortable_value");
@@ -255,8 +286,8 @@
 				jqObj.addClass("sortable-processed");
 			});
 			//delete out of data record
-			this.ulElement.find("li").remove(":not(.sortable-processed)");
-			this.ulElement.find("li").removeClass("sortable-processed");
+			$(this.element).find("li").remove(":not(.sortable-processed)");
+			$(this.element).find("li").removeClass("sortable-processed");
 			this.refreshItemsDisplay();
 			return newAddedItems;
 		},
@@ -267,8 +298,7 @@
 			if (typeof newOptions !== 'undefined' && newOptions !== null) {
 				//TODO add validation to argument
 				this.options = $.extend({}, this.options, newOptions); //this.options.sortJsonData is using to store source data
-				this.prepareModelData();
-				this.refreshData();
+				this.init();
 			} else {
 				return {
 					sortJsonData: this.options.sortJsonData,
@@ -280,14 +310,14 @@
 		/**
 		 *Select a item in single select mode
 		 */
-		selectItemFuction: function(jqObj) {
+		selectItemFunction: function(jqObj) {
 			if (!this.isEditMode) {
 				if (!this.isBatchJob) {
 					this.selectedItem = jqObj;
 					if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
 						//Delegate, this is invoked when user select one item in our list
 						this.selectOneItemEnableButtonsDelegate();
-						this.selectedItem.parent().find(".ui-state-active").removeClass("ui-state-active");
+						$(this.element).find(".ui-state-active").removeClass("ui-state-active");
 						this.selectedItem.addClass("ui-state-active");
 					} else {
 						//Delegate, this is invoked when table is nothing selected
@@ -295,7 +325,7 @@
 					}
 				} else {
 					this.selectedItem = null;
-					$(this.ulElement).find(".ui-state-active").removeClass("ui-state-active");
+					$(this.element).find(".ui-state-active").removeClass("ui-state-active");
 				}
 			}
 		},
@@ -433,7 +463,7 @@
 					var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
 					this.deleteDataFromModel(foundRecord.id);
 					this.selectedItem.remove();
-					this.selectItemFuction(null);
+					this.selectItemFunction(null);
 				}
 				this.refreshData();
 			} else {
@@ -461,14 +491,16 @@
 			var id = startIndex++;
 			this.options.sortJsonData.push(this.getOneItemJsonObj(this.options.defaultNewItemKey, id, this.options.enableNewItem, this.options.defaultNewItemText));
 			var newItems = this.refreshData();
-			this.selectItemFuction(newItems[0]);
+			this.selectItemFunction(newItems[0]);
 			this.editFunction();
+			this.startIndex = startIndex;
 		},
 		/**
 		 *Get a new json data
 		 */
 		getOneItemJsonObj: function(keyStr, idStr, isActiveFlag, valueStr) {
 			return {
+				index: idStr,
 				id: idStr,
 				key: keyStr,
 				isActiveFlag: isActiveFlag,
@@ -481,7 +513,7 @@
 		batchJobFunction: function(sortElementId) {
 			this.isBatchJob = true;
 			this.batchModeButtonStatus();
-			this.selectItemFuction(null);
+			this.selectItemFunction(null);
 			$(this.element).find("li .li_sortable_checkbox").show();
 
 		},
@@ -526,11 +558,20 @@
 
 		},
 		refreshItemsDisplay: function() {
+			if (this.options.groupMode) {
+				var tempDisableItems = $(this.ulElement).find(".ui-state-disabled");
+				$(this.ulElement).find("li").remove(".ui-state-disabled");
+				$(this.disableUlElement).append(tempDisableItems);
+				var tempEnableItems = $(this.disableUlElement).find("li:not(.ui-state-disabled)");
+				$(this.disableUlElement).find("li").remove(":not(.ui-state-disabled)");
+				$(this.ulElement).append(tempEnableItems);
+				this.recordNewOrder();
+			}
 			//enable these Items.
-			$(this.ulElement).sortable("option", "items", "li:not(.ui-state-disabled)");
+			this.sortableObj.sortable("option", "items", "li:not(.ui-state-disabled)");
 			//disable these Items
-			$(this.ulElement).sortable("option", "cancel", ".ui-state-disabled,input");
-			$(this.ulElement).sortable("refresh");
+			this.sortableObj.sortable("option", "cancel", ".ui-state-disabled,input");
+			this.sortableObj.sortable("refresh");
 		},
 		getButtonHtml: function(type) {
 			var sHtml = "";
@@ -570,8 +611,10 @@
 		prepareModelData: function() {
 			//add id to every records
 			var count = 0;
+			var index = 0;
 			$.each(this.options.sortJsonData, function(index, value) {
 				value.id = count++;
+				value.index = index++;
 			});
 			this.startIndex = count;
 		},
@@ -656,6 +699,13 @@
 
 	//plugin method
 	var methods = {
+		Destroy: function() {
+			var cacheObj = $.data(this, "plugin_" + pluginName);
+			if (cacheObj) {
+				$(cacheObj.element).empty();
+				$.removeData(this, "plugin_" + pluginName);
+			}
+		},
 		ModelData: function() {
 			var tempArguments = arguments;
 			return invokeMethod(tempArguments, "getOrSetModelData");
@@ -669,7 +719,7 @@
 	//Define plugin
 	$.fn[pluginName] = function() {
 		var tempArguments = arguments;
-		var getJsonData = null;
+		var result = null;
 		this.each(function() {
 			if (!$.data(this, "plugin_" + pluginName)) {
 				//init plugin
@@ -680,16 +730,16 @@
 					method = methods[method];
 					arguments = Array.prototype.slice.call(tempArguments, 1);
 					arguments.push($.data(this, "plugin_" + pluginName));
-					getJsonData = method.apply(this, arguments);
+					result = method.apply(this, arguments);
 				} else if (typeof method === "object" || !method) {} else {
-					$.error("Method" + method + "does not exist on jQuery.pluginName");
+					$.error("Method" + method + "does not exist on jQuery." + pluginName);
 					return this;
 				}
 			}
 		});
 
-		if (typeof getJsonData !== 'undefined' && getJsonData !== null) {
-			return getJsonData;
+		if (typeof result !== 'undefined' && result !== null) {
+			return result;
 		}
 
 		// chain jQuery functions
