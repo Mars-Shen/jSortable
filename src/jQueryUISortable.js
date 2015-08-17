@@ -36,17 +36,18 @@
 			normalModeButtonText: "Normal Mode", //text on normal mode button.
 			//edit mode group
 			editButton: true, //show edit button or not, default is true.
-			editButtonText: "Edit Item", //text on edit button.
-			saveButtonText: "save Item", //text on save button.
+			editButtonText: "Edit", //text on edit button.
+			saveButtonText: "Save", //text on save button.
 			cancelButtonText: "Cancel", //text on cancel button.
 
 			addButton: true, //show add item button or not, default is true.
-			addButtonText: "Add Item", //text on add item button.
+			addButtonText: "Add", //text on add item button.
 			deleteButton: true, //show delete button or not, default is true.
-			deleteButtonText: "Delete Item", //text on delete button.
+			deleteButtonText: "Delete", //text on delete button.
 			submitButton: true, //show submit button or not, default is true.
 			submitButtonText: "Submit", //text on submit button.
 			submitCallBack: function() {}, //submit button callback.
+			buttonClass: "" // custom button class.
 		};
 
 	var SortTable = function(element, options) {
@@ -137,7 +138,11 @@
 			var element = $(this.element);
 			element.empty();
 			//add ul element
-			var divElement = $("<div class=\"sortable_div_default\" id=\"div_" + this.elementId + "\"></div>");
+			var divClass = "sortable_div_default";
+			if (!this.options.groupMode) {
+				divClass = "sortable_div_single_default";
+			}
+			var divElement = $("<div class=\"" + divClass + "\" id=\"div_" + this.elementId + "\"></div>");
 			var ulElement = $("<ul id=\"ul_" + this.elementId + "\"></ul>");
 			this.ulElement = ulElement;
 			element.append(divElement);
@@ -575,33 +580,34 @@
 		},
 		getButtonHtml: function(type) {
 			var sHtml = "";
+			var buttonClass = "ui-button ui-widget ui-button-text-only " + this.options.buttonClass;
 			switch (type) {
 				case "act":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_acitveInactiveItem\" disabled=\"disabled\" value=\"" + this.options.activeButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_acitveInactiveItem\" disabled=\"disabled\" value=\"" + this.options.activeButtonText + "\"/>";
 					break;
 				case "bat":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_batchJob\"  value=\"" + this.options.batchButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_batchJob\"  value=\"" + this.options.batchButtonText + "\"/>";
 					break;
 				case "nol":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_normalMode\" class=\"hide\" value=\"" + this.options.normalModeButtonText + "\"/>";
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_normalMode\" class=\"hide " + buttonClass + "\" value=\"" + this.options.normalModeButtonText + "\"/>";
 					break;
 				case "edi":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_editItem\" disabled=\"disabled\" value=\"" + this.options.editButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_editItem\" disabled=\"disabled\" value=\"" + this.options.editButtonText + "\"/>";
 					break;
 				case "sav":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_saveItem\" class=\"hide\" value=\"" + this.options.saveButtonText + "\"/>";
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_saveItem\" class=\"hide " + buttonClass + "\" value=\"" + this.options.saveButtonText + "\"/>";
 					break;
 				case "can":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_cancelItem\" class=\"hide\" value=\"" + this.options.cancelButtonText + "\"/>";
+					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_cancelItem\" class=\"hide " + buttonClass + "\" value=\"" + this.options.cancelButtonText + "\"/>";
 					break;
 				case "add":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_addItem\" value=\"" + this.options.addButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_addItem\" value=\"" + this.options.addButtonText + "\"/>";
 					break;
 				case "del":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_deleteItem\" disabled=\"disabled\" value=\"" + this.options.deleteButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_deleteItem\" disabled=\"disabled\" value=\"" + this.options.deleteButtonText + "\"/>";
 					break;
 				case "sub":
-					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_submit\" value=\"" + this.options.submitButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_submit\" value=\"" + this.options.submitButtonText + "\"/>";
 					break;
 				default:
 					break;

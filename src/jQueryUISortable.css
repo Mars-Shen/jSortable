@@ -2,14 +2,14 @@
 	list-style-type : none;
 	margin : 0;
 	padding : 0;
-	width : 40% ;
+	width : 255px ;
 	border: 1px solid #eee;
     min-height: 20px;
     list-style-type: none;
     margin: 0;
     padding: 5px 0 0 0;
     float: left;
-    margin-right: 20px;
+    margin: 0 10px 0 10px;
     overflow: auto;
     height: 290px;
 }
@@ -40,9 +40,17 @@ html > body.sortable_default li {
 *css for button group
 */
 .sortable_button_default{
+	width: 70px;
+	float: left;
 
 }
 .sortable_div_default{
-	width:600px;
+	width:560px;
 	height: 300px;
+	float: left;
+}
+.sortable_div_single_default{
+	width:280px;
+	height: 300px;
+	float: left;
 }
