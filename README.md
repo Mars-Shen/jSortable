@@ -91,6 +91,7 @@ This form show all options:
 |submitButton| Show submit button or not. | true |
 |submitButtonText| Default text on submit button. | "Submit" |
 |submitCallBack| Submit button callback. | function(){} |
+|buttonClass| Custom button css class. | "" |
 
 #### After these step, you can set a callback for your buttons.
 ```javascript
