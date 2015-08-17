@@ -16,7 +16,7 @@ In oredr to build a sortable and editable list
 - jQuery UI
 
 ## How To Use
-First, you need import our js and css file in your html file's head. Don't forget to impor **jQuery** and **jQuery UI**
+First, you need import our js and css file in your html file's head. Don't forget to import **jQuery** and **jQuery UI**
 ```html
   <link rel="stylesheet" href="../jquery-ui/jquery-ui.css">
   <script src="../jquery-ui/jquery-1.11.3.js"></script>
@@ -69,6 +69,7 @@ This form show all options:
 
 | Name  | Description |Default|
 | :------------ |:------------|:------------|
+|groupMode| Group active and inactive items in two groups.| true |
 |keyValueMode| Make this plugin in key value mode or not.| true |
 |enableNewItem| if this option is true, new item which you added will be enable as default. | false |
 |defaultNewItemKey| Default new item's key | "NK" |
@@ -107,6 +108,7 @@ There are just 2 medthod you can inovke right now.
 | Name  | Description |Arguments|
 | :------------ |:------------|:------------|
 |ModelData|Get or reset list's options in a json format ||
+|Destroy|Destroy this plugin ||
 |SubmitCallback|Submit button callback|function|
 
 Json based data from `ModelData` medthod:
@@ -127,6 +129,9 @@ You can aslo reset the `options` source into this plugin,
 you can find a demo in this project *demo* folder.
 
 ## Screenshot
+Group Mode Demo
+![Group Mode Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo_group_mode.gif)
+Single Mode Demo
 ![Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo.gif)
 
 ##License
