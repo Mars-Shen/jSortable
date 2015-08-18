@@ -137,10 +137,11 @@
 		buildSortHTML: function() {
 			var element = $(this.element);
 			element.empty();
+			element.addClass("sortable_div_container");
 			//add ul element
-			var divClass = "sortable_div_default";
+			var divClass = "sortable_list_container";
 			if (!this.options.groupMode) {
-				divClass = "sortable_div_single_default";
+				divClass = "sortable_list_single_container";
 			}
 			var divElement = $("<div class=\"" + divClass + "\" id=\"div_" + this.elementId + "\"></div>");
 			var ulElement = $("<ul id=\"ul_" + this.elementId + "\"></ul>");
@@ -148,22 +149,24 @@
 			element.append(divElement);
 			divElement.append(ulElement);
 			ulElement.empty();
-			ulElement.addClass("sortable_default");
 			ulElement.addClass("sortable_connectedSortable_" + this.elementId);
 			if (this.options.groupMode) {
+				ulElement.addClass("sortable_default");
 				var disableUlElement = $("<ul id=\"ul_disable_" + this.elementId + "\"></ul>");
 				this.disableUlElement = disableUlElement;
 				disableUlElement.empty();
 				disableUlElement.addClass("sortable_default");
 				disableUlElement.addClass("sortable_connectedSortable_" + this.elementId);
 				divElement.append(disableUlElement);
+			}else{
+				ulElement.addClass("sortable_single_default");
 			}
 			var activedDataTemp = this.activedData;
 			var inactivedDataTemp = this.inactivedData;
 			//add buttons group div element
 			var buttonElements = $("<div id=\"buttons_" + this.elementId + "\">");
 			this.buttonElements = buttonElements;
-			buttonElements.addClass("sortable_button_default");
+			buttonElements.addClass("sortable_button_group_default");
 			element.append(buttonElements);
 			if (this.options.activeButton) {
 				buttonElements.append($(this.getButtonHtml("act")));
@@ -580,7 +583,7 @@
 		},
 		getButtonHtml: function(type) {
 			var sHtml = "";
-			var buttonClass = "ui-button ui-widget ui-button-text-only " + this.options.buttonClass;
+			var buttonClass = "ui-widget ui-button-text-only sortable_button_default " + this.options.buttonClass;
 			switch (type) {
 				case "act":
 					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_acitveInactiveItem\" disabled=\"disabled\" value=\"" + this.options.activeButtonText + "\"/>";

@@ -1,25 +1,42 @@
+/*ul element css*/
 .sortable_default {
 	list-style-type : none;
 	margin : 0;
 	padding : 0;
-	width : 255px ;
+	width : 45% ;
+	min-width: 100px;
 	border: 1px solid #eee;
     min-height: 20px;
     list-style-type: none;
     margin: 0;
     padding: 5px 0 0 0;
     float: left;
-    margin: 0 10px 0 10px;
+    margin: 0 2%;
     overflow: auto;
     height: 290px;
 }
-.sortable_default li {
+/*ul element css*/
+.sortable_single_default {
+	list-style-type : none;
+	margin : 0;
+	padding : 0;
+	width : 95% ;
+	min-width: 100px;
+	border: 1px solid #eee;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin: 0 2%;
+    overflow: auto;
+    height: 290px;
+}
+.sortable_default li,
+.sortable_single_default li {
 	margin : 0 5px 5px 5px;
 	padding : 5px;
 	font-size : 1.2em;
-	height : 1.5em;
-}
-html > body.sortable_default li {
 	height : 1.5em;
 	line-height : 1.2em;
 }
@@ -36,21 +53,36 @@ html > body.sortable_default li {
 .sortable_text_value{
 	width : 40% ;
 }
-/*
-*css for button group
-*/
-.sortable_button_default{
-	width: 70px;
+
+/*css for button group*/
+.sortable_button_group_default{
+	width: 19%;
+	max-width: 100px;
+	height: 290px;
 	float: left;
 
 }
-.sortable_div_default{
-	width:560px;
+/*css for button*/
+.sortable_button_default{
+	width: 100%;
+	max-width: 100px;
+	float: left;
+	padding: .5em .2em;
+}
+/*sortable list container*/
+.sortable_list_container{
+	width: 80%;
 	height: 300px;
 	float: left;
 }
-.sortable_div_single_default{
-	width:280px;
+/*sortable list container for single mode*/
+.sortable_list_single_container{
+	width:80%;
 	height: 300px;
 	float: left;
+}
+/*user div container css*/
+.sortable_div_container{
+	max-width: 700px;
+    height: 300px;
 }
