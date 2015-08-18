@@ -158,7 +158,7 @@
 				disableUlElement.addClass("sortable_default");
 				disableUlElement.addClass("sortable_connectedSortable_" + this.elementId);
 				divElement.append(disableUlElement);
-			}else{
+			} else {
 				ulElement.addClass("sortable_single_default");
 			}
 			var activedDataTemp = this.activedData;
@@ -260,10 +260,11 @@
 				var flag = v.isActiveFlag;
 				var jqObj = $(that.element).find("#li_sortable_item_" + that.elementId + "_" + idStr);
 				if (jqObj.length == 0) {
+					var textString = that.getKeyValueString(keyStr, valueStr);
 					var newItem = $("<li class=\"ui-state-default\" id=\"li_sortable_item_" + that.elementId + "_" + idStr + "\">" +
 						"<input type=\"checkbox\" class=\"li_sortable_checkbox hide\" id=\"li_sortable_checkbox_" + idStr + "\"/>" +
 						"<input type=\"hidden\" class=\"hid_sortable_id\" id=\"hid_sortable_id_" + idStr + "\" value=\"" + idStr + "\"/>" +
-						"<span class=\"sortable_read_only_text\">" + that.getKeyValueString(keyStr, valueStr) + "</span>" +
+						"<span class=\"sortable_read_only_text\" title=\"" + textString + "\">" + textString + "</span>" +
 						"<span class=\"sortable_edit_text hide\">" + that.getKeyValueString("<input type=\"text\" class=\"hid_sortable_key sortable_text_key\" id=\"hid_sortable_key_" + idStr + "\" value=\"" + keyStr + "\"/>", "<input type=\"text\" class=\"hid_sortable_value sortable_text_value\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/>") + "</span>" +
 						"</li>");
 					tempElement.append(newItem);
@@ -583,10 +584,10 @@
 		},
 		getButtonHtml: function(type) {
 			var sHtml = "";
-			var buttonClass = "ui-widget ui-button-text-only sortable_button_default " + this.options.buttonClass;
+			var buttonClass = "ui-widget ui-button-text-only sortable_button_default ui-state-default" + this.options.buttonClass;
 			switch (type) {
 				case "act":
-					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_acitveInactiveItem\" disabled=\"disabled\" value=\"" + this.options.activeButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"ui-state-disabled " + buttonClass + "\" id=\"" + this.elementId + "_acitveInactiveItem\" disabled=\"disabled\" value=\"" + this.options.activeButtonText + "\"/>";
 					break;
 				case "bat":
 					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_batchJob\"  value=\"" + this.options.batchButtonText + "\"/>";
@@ -595,7 +596,7 @@
 					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_normalMode\" class=\"hide " + buttonClass + "\" value=\"" + this.options.normalModeButtonText + "\"/>";
 					break;
 				case "edi":
-					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_editItem\" disabled=\"disabled\" value=\"" + this.options.editButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"ui-state-disabled " + buttonClass + "\" id=\"" + this.elementId + "_editItem\" disabled=\"disabled\" value=\"" + this.options.editButtonText + "\"/>";
 					break;
 				case "sav":
 					sHtml = "<input type=\"button\" id=\"" + this.elementId + "_saveItem\" class=\"hide " + buttonClass + "\" value=\"" + this.options.saveButtonText + "\"/>";
@@ -607,7 +608,7 @@
 					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_addItem\" value=\"" + this.options.addButtonText + "\"/>";
 					break;
 				case "del":
-					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_deleteItem\" disabled=\"disabled\" value=\"" + this.options.deleteButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"ui-state-disabled " + buttonClass + "\" id=\"" + this.elementId + "_deleteItem\" disabled=\"disabled\" value=\"" + this.options.deleteButtonText + "\"/>";
 					break;
 				case "sub":
 					sHtml = "<input type=\"button\" class=\"" + buttonClass + "\" id=\"" + this.elementId + "_submit\" value=\"" + this.options.submitButtonText + "\"/>";
@@ -631,11 +632,17 @@
 			$("#" + this.elementId + "_editItem").removeAttr("disabled");
 			$("#" + this.elementId + "_deleteItem").removeAttr("disabled");
 			$("#" + this.elementId + "_acitveInactiveItem").removeAttr("disabled");
+			$("#" + this.elementId + "_editItem").removeClass("ui-state-disabled");
+			$("#" + this.elementId + "_deleteItem").removeClass("ui-state-disabled");
+			$("#" + this.elementId + "_acitveInactiveItem").removeClass("ui-state-disabled");
 		}, //Delegate, this is invoked when user select one item in our list
 		unselectItemDisableButtonsDelegate: function() {
 			$("#" + this.elementId + "_editItem").attr("disabled", "disabled");
 			$("#" + this.elementId + "_deleteItem").attr("disabled", "disabled");
 			$("#" + this.elementId + "_acitveInactiveItem").attr("disabled", "disabled");
+			$("#" + this.elementId + "_editItem").addClass("ui-state-disabled");
+			$("#" + this.elementId + "_deleteItem").addClass("ui-state-disabled");
+			$("#" + this.elementId + "_acitveInactiveItem").addClass("ui-state-disabled");
 		}, //Delegate, this is invoked when table is nothing selected
 		enterEditModeButtonsStatusDelegate: function() {
 			$("#" + this.elementId + "_saveItem").show();
@@ -660,7 +667,10 @@
 			$("#" + this.elementId + "_editItem").hide();
 			$("#" + this.elementId + "_acitveInactiveItem").removeAttr("disabled");
 			$("#" + this.elementId + "_deleteItem").removeAttr("disabled");
+			$("#" + this.elementId + "_deleteItem").removeClass("ui-state-disabled");
+			$("#" + this.elementId + "_acitveInactiveItem").removeClass("ui-state-disabled");
 			$("#" + this.elementId + "_editItem").attr("disabled", "disabled");
+			$("#" + this.elementId + "_editItem").addClass("ui-state-disabled");
 		}, //Delegate, this is invoked when user enter batch job mode
 		exitBatchJobModeButtonStatusDelegate: function() {
 			$("#" + this.elementId + "_batchJob").show();
@@ -669,14 +679,20 @@
 			$("#" + this.elementId + "_addItem").show();
 			$("#" + this.elementId + "_acitveInactiveItem").attr("disabled", "disabled");
 			$("#" + this.elementId + "_deleteItem").attr("disabled", "disabled");
+			$("#" + this.elementId + "_deleteItem").addClass("ui-state-disabled");
+			$("#" + this.elementId + "_acitveInactiveItem").addClass("ui-state-disabled");
 		}, //Delegate, this is invoked when user exit batch job mode
 		enableBatchButtonDelegate: function() {
 			$("#" + this.elementId + "_acitveInactiveItem").removeAttr("disabled");
 			$("#" + this.elementId + "_deleteItem").removeAttr("disabled");
+			$("#" + this.elementId + "_deleteItem").removeClass("ui-state-disabled");
+			$("#" + this.elementId + "_acitveInactiveItem").removeClass("ui-state-disabled");
 		}, //Delegate, this is invoked when user enter batch job mode and check some check boxes
 		disableBatchJobButtonDelegate: function() {
 			$("#" + this.elementId + "_acitveInactiveItem").attr("disabled", "disabled");
 			$("#" + this.elementId + "_deleteItem").attr("disabled", "disabled");
+			$("#" + this.elementId + "_deleteItem").addClass("ui-state-disabled");
+			$("#" + this.elementId + "_acitveInactiveItem").addClass("ui-state-disabled");
 		}, //Delegate, this is invoked when user enter batch job mode and select nothing
 		getKeyValueString: function(key, value) {
 			if (this.options.keyValueMode) {
