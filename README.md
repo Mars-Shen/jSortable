@@ -106,7 +106,7 @@ sortObj.sorttable("SubmitCallback", function () {
    	alert(str);
 });
 ```
-There are just 2 medthod you can inovke right now.
+There are some medthods you can inovke right now.
 
 | Name  | Description |Arguments|
 | :------------ |:------------|:------------|
