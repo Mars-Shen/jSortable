@@ -1,91 +1,176 @@
-/*ul element css*/
-.sortable_default {
-	list-style-type : none;
-	margin : 0;
-	padding : 0;
-	width : 45% ;
-	min-width: 100px;
-	border: 1px solid #eee;
-    min-height: 20px;
-    list-style-type: none;
-    margin: 0;
-    padding: 5px 0 0 0;
-    float: left;
-    margin: 0 2%;
-    overflow: auto;
-    height: 290px;
-}
-/*ul element css*/
-.sortable_single_default {
-	list-style-type : none;
-	margin : 0;
-	padding : 0;
-	width : 95% ;
-	min-width: 100px;
-	border: 1px solid #eee;
-    min-height: 20px;
-    list-style-type: none;
-    margin: 0;
-    padding: 5px 0 0 0;
-    float: left;
-    margin: 0 2%;
-    overflow: auto;
-    height: 290px;
-}
-.sortable_default li,
-.sortable_single_default li {
-	margin : 0 5px 5px 5px;
-	padding : 5px;
-	font-size : 1.2em;
-	height : 1.5em;
-	line-height : 1.2em;
-	overflow: hidden;
-	white-space: nowrap;
-}
-.ui-state-highlight {
-	height : 1.5em;
-	line-height : 1.2em;
-}
-.hide {
-	display : none;
-}
-.sortable_text_key{
-	width : 20% ;
-}
-.sortable_text_value{
-	width : 40% ;
+@media screen and (min-width: 500px) {
+	/*ul element css*/
+	.sortable_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 46% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 1.5%;
+		overflow: auto;
+		height: 290px;
+	}
+	/*ul element css*/
+	.sortable_single_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 95% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 2%;
+		overflow: auto;
+		height: 290px;
+	}
+	.sortable_default li,
+	.sortable_single_default li {
+		margin : 0 5px 5px 5px;
+		padding : 5px;
+		font-size : 1.2em;
+		height : 1.5em;
+		line-height : 1.2em;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.ui-state-highlight {
+		height : 1.5em;
+		line-height : 1.2em;
+	}
+	.hide {
+		display : none;
+	}
+	.sortable_text_key{
+		width : 20% ;
+	}
+	.sortable_text_value{
+		width : 40% ;
+		min-width: 100px;
+	}
+
+	/*css for button group*/
+	.sortable_button_group_default{
+		width: 19%;
+		max-width: 100px;
+		height: 290px;
+		float: left;
+
+	}
+	/*css for button*/
+	.sortable_button_default{
+		width: 100%;
+		max-width: 100px;
+		float: left;
+		padding: .5em .2em;
+		margin: 0 0 .3em 0;
+	}
+	/*sortable list container*/
+	/*sortable list container for single mode*/
+	.sortable_list_container,
+	.sortable_list_single_container{
+		width:80%;
+		height: 300px;
+		float: left;
+	}
+	/*user div container css*/
+	.sortable_div_container{
+		max-width: 700px;
+		height: 300px;
+	}
 }
 
-/*css for button group*/
-.sortable_button_group_default{
-	width: 19%;
-	max-width: 100px;
-	height: 290px;
-	float: left;
+@media screen and (max-width: 500px) {
+	/*ul element css*/
+	.sortable_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 97% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 2%;
+		overflow: auto;
+		height: 290px;
+	}
+	/*ul element css*/
+	.sortable_single_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 97% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 2%;
+		overflow: auto;
+		height: 290px;
+	}
+	.sortable_default li,
+	.sortable_single_default li {
+		margin : 0 5px 5px 5px;
+		padding : 5px;
+		font-size : 1.2em;
+		height : 1.5em;
+		line-height : 1.2em;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.ui-state-highlight {
+		height : 1.5em;
+		line-height : 1.2em;
+	}
+	.hide {
+		display : none;
+	}
+	.sortable_text_key{
+		width : 20% ;
+	}
+	.sortable_text_value{
+		width : 40% ;
+		min-width: 100px;
+	}
 
-}
-/*css for button*/
-.sortable_button_default{
-	width: 100%;
-	max-width: 100px;
-	float: left;
-	padding: .5em .2em;
-	margin: 0 0 .3em 0;
-}
-/*sortable list container*/
-.sortable_list_container{
-	width: 80%;
-	height: 300px;
-	float: left;
-}
-/*sortable list container for single mode*/
-.sortable_list_single_container{
-	width:80%;
-	height: 300px;
-	float: left;
-}
-/*user div container css*/
-.sortable_div_container{
-	max-width: 700px;
-    height: 300px;
-}
+	/*css for button group*/
+	.sortable_button_group_default{
+		width: 19%;
+		max-width: 100px;
+		height: 290px;
+		float: left;
+
+	}
+	/*css for button*/
+	.sortable_button_default{
+		width: 100%;
+		max-width: 100px;
+		float: left;
+		padding: .5em .2em;
+		margin: 0 0 .3em 0;
+	}
+	/*sortable list container*/
+	/*sortable list container for single mode*/
+	.sortable_list_container,
+	.sortable_list_single_container{
+		width:80%;
+		height: 600px;
+		float: left;
+	}
+	/*user div container css*/
+	.sortable_div_container{
+		max-width: 700px;
+		height: 300px;
+	}
