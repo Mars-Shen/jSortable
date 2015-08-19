@@ -66,7 +66,7 @@ var options = {
   		]
   	};
 ```
-This form show all options:
+This form show all `options`:
 
 | Name  | Description |Default|
 | :------------ |:------------|:------------|
@@ -91,8 +91,9 @@ This form show all options:
 |deleteButtonText| Default text on delete button. | "Delete" |
 |submitButton| Show submit button or not. | true |
 |submitButtonText| Default text on submit button. | "Submit" |
-|submitCallBack| Submit button callback. | function(){} |
+|submitCallBack| Submit button callback. | function |
 |buttonClass| Custom button css class. | "" |
+|deleteCallBack|Delete button callback. use to confirm delete action. argument is select item(s).|function|
 
 #### After these step, you can set a callback for your buttons.
 ```javascript
@@ -109,11 +110,16 @@ There are just 2 medthod you can inovke right now.
 
 | Name  | Description |Arguments|
 | :------------ |:------------|:------------|
-|ModelData|Get or reset list's options in a json format ||
+|ModelData|Get or reset list's options in a json format |options|
 |Destroy|Destroy this plugin ||
-|SubmitCallback|Submit button callback|function|
+|SubmitCallback|Set submit button callback|function|
+|DeleteCallBack|Set delete button callback|function|
+You can get json based data from `ModelData` medthod
+```javascript
+	var data = sortObj.sorttable("ModelData");
+```
 
-Json based data from `ModelData` medthod:
+Json based data structure from `ModelData` medthod:
 ```json5
 	{
 		sortJsonData : [{key:,isActiveFlag:,value}],//list's data source array, json based.
