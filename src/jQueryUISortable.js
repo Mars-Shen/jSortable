@@ -47,6 +47,9 @@
 			submitButton: true, //show submit button or not, default is true.
 			submitButtonText: "Submit", //text on submit button.
 			submitCallBack: function() {}, //submit button callback.
+			deleteCallBack: function(selectItems) {
+				return confirm("Do you want to delete this record(s)");
+			}, //delete button callback. use to confirm delete action. argument is select item(s).
 			buttonClass: "" // custom button class.
 		};
 
@@ -86,7 +89,11 @@
 			});
 			//submit button clicked
 			$(this.element).on("click", "#" + this.elementId + "_submit", function(event) {
-				that.options.submitCallBack(event);
+				if (typeof that.options.submitCallBack == "function") {
+					that.options.submitCallBack(event);
+				} else {
+					$.error("SubmitCallBack " + that.options.submitCallBack + " is not a function!");
+				}
 			});
 			//active or inactive selected item
 			$(this.element).on("click", "#" + this.elementId + "_acitveInactiveItem", function() {
@@ -220,7 +227,7 @@
 				this.sortableObj = $(this.ulElement).sortable(argOptions);
 			}
 
-			this.sortableObj.disableSelection();
+			// this.sortableObj.disableSelection();
 		},
 
 		/**
@@ -468,25 +475,35 @@
 		 */
 		deleteFunction: function() {
 			if (!this.isBatchJob) {
-				if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
-					var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
-					this.deleteDataFromModel(foundRecord.id);
-					this.selectedItem.remove();
-					this.selectItemFunction(null);
+				if (typeof this.options.deleteCallBack == "function" && this.options.deleteCallBack(this.selectedItem)) {
+					if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
+						var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
+						this.deleteDataFromModel(foundRecord.id);
+						this.selectedItem.remove();
+						this.selectItemFunction(null);
+					}
+					this.refreshData();
+				} else {
+					$.error("DeleteCallBack " + this.options.deleteCallBack + " is not a function!");
 				}
-				this.refreshData();
 			} else {
+
 				var allItems = this.getSelectItems();
 				var checkedItems = allItems.checkedItems;
 				var that = this;
-				$.each(checkedItems, function(index, v) {
-					var foundRecord = that.findDataFromModel($.trim(v.find(".hid_sortable_id").val()));
-					that.deleteDataFromModel(foundRecord.id);
-					v.remove();
-				});
-				this.selectNumber = 0;
-				this.batchModeButtonStatus();
+				if (typeof this.options.deleteCallBack == "function" && this.options.deleteCallBack(checkedItems)) {
+					$.each(checkedItems, function(index, v) {
+						var foundRecord = that.findDataFromModel($.trim(v.find(".hid_sortable_id").val()));
+						that.deleteDataFromModel(foundRecord.id);
+						v.remove();
+					});
+					this.selectNumber = 0;
+					this.batchModeButtonStatus();
+				} else {
+					$.error("DeleteCallBack " + this.options.deleteCallBack + " is not a function!");
+				}
 			}
+
 		},
 		/**
 		 * Add a new item to specified table
@@ -738,6 +755,10 @@
 		SubmitCallback: function() {
 			var tempArguments = arguments;
 			setDelegateMethod(tempArguments, "submitCallBack");
+		},
+		DeleteCallBack: function() {
+			var tempArguments = arguments;
+			setDelegateMethod(tempArguments, "deleteCallBack");
 		}
 	};
 
