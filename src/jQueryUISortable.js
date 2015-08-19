@@ -540,7 +540,7 @@
 			this.isBatchJob = true;
 			this.batchModeButtonStatus();
 			this.selectItemFunction(null);
-			$(this.element).find("li .li_sortable_checkbox").show();
+			$(this.element).find("li .li_sortable_checkbox").show().removeClass("hide");
 
 		},
 		/**
@@ -551,7 +551,7 @@
 			this.selectNumber = 0;
 			this.batchModeButtonStatus();
 			var checkboxes = $(this.element).find("li .li_sortable_checkbox");
-			checkboxes.hide();
+			checkboxes.hide().addClass("hide");
 			$.each(checkboxes, function(i, v) {
 				$(v).prop("checked", false);
 			});
@@ -662,26 +662,26 @@
 			$("#" + this.elementId + "_acitveInactiveItem").addClass("ui-state-disabled");
 		}, //Delegate, this is invoked when table is nothing selected
 		enterEditModeButtonsStatusDelegate: function() {
-			$("#" + this.elementId + "_saveItem").show();
-			$("#" + this.elementId + "_cancelItem").show();
-			$("#" + this.elementId + "_editItem").hide();
-			$("#" + this.elementId + "_addItem").hide();
-			$("#" + this.elementId + "_deleteItem").hide();
-			$("#" + this.elementId + "_batchJob").hide();
+			$("#" + this.elementId + "_saveItem").show().removeClass("hide");
+			$("#" + this.elementId + "_cancelItem").show().removeClass("hide");
+			$("#" + this.elementId + "_editItem").hide().addClass("hide");
+			$("#" + this.elementId + "_addItem").hide().addClass("hide");
+			$("#" + this.elementId + "_deleteItem").hide().addClass("hide");
+			$("#" + this.elementId + "_batchJob").hide().addClass("hide");
 		}, //Delegate, this is invoked when user enter edit mode
 		exitEditModeButtonsStatusDelegate: function() {
-			$("#" + this.elementId + "_saveItem").hide();
-			$("#" + this.elementId + "_cancelItem").hide();
-			$("#" + this.elementId + "_editItem").show();
-			$("#" + this.elementId + "_addItem").show();
-			$("#" + this.elementId + "_deleteItem").show();
-			$("#" + this.elementId + "_batchJob").show();
+			$("#" + this.elementId + "_saveItem").hide().addClass("hide");
+			$("#" + this.elementId + "_cancelItem").hide().addClass("hide");
+			$("#" + this.elementId + "_editItem").show().removeClass("hide");
+			$("#" + this.elementId + "_addItem").show().removeClass("hide");
+			$("#" + this.elementId + "_deleteItem").show().removeClass("hide");
+			$("#" + this.elementId + "_batchJob").show().removeClass("hide");
 		}, //Delegate, this is invoked when user exit edit mode
 		enterBatchJobModeButtonStatusDelegate: function() {
-			$("#" + this.elementId + "_batchJob").hide();
-			$("#" + this.elementId + "_normalMode").show();
-			$("#" + this.elementId + "_addItem").hide();
-			$("#" + this.elementId + "_editItem").hide();
+			$("#" + this.elementId + "_batchJob").hide().addClass("hide");
+			$("#" + this.elementId + "_normalMode").show().removeClass("hide");
+			$("#" + this.elementId + "_addItem").hide().addClass("hide");
+			$("#" + this.elementId + "_editItem").hide().addClass("hide");
 			$("#" + this.elementId + "_acitveInactiveItem").removeAttr("disabled");
 			$("#" + this.elementId + "_deleteItem").removeAttr("disabled");
 			$("#" + this.elementId + "_deleteItem").removeClass("ui-state-disabled");
@@ -690,10 +690,10 @@
 			$("#" + this.elementId + "_editItem").addClass("ui-state-disabled");
 		}, //Delegate, this is invoked when user enter batch job mode
 		exitBatchJobModeButtonStatusDelegate: function() {
-			$("#" + this.elementId + "_batchJob").show();
-			$("#" + this.elementId + "_normalMode").hide();
-			$("#" + this.elementId + "_editItem").show();
-			$("#" + this.elementId + "_addItem").show();
+			$("#" + this.elementId + "_batchJob").show().removeClass("hide");
+			$("#" + this.elementId + "_normalMode").hide().addClass("hide");
+			$("#" + this.elementId + "_editItem").show().removeClass("hide");
+			$("#" + this.elementId + "_addItem").show().removeClass("hide");
 			$("#" + this.elementId + "_acitveInactiveItem").attr("disabled", "disabled");
 			$("#" + this.elementId + "_deleteItem").attr("disabled", "disabled");
 			$("#" + this.elementId + "_deleteItem").addClass("ui-state-disabled");
