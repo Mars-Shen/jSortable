@@ -82,13 +82,13 @@ This form show all options:
 |batchButtonText| Default text on batch mode button. | "Batch Mode" |
 |normalModeButtonText| Default text on normal mode button. | "Normal Mode" |
 |editButton| Show edit button or not. | true |
-|editButtonText| Default text on edit button. | "Edit Item" |
-|saveButtonText| Default text on save button. | "Save Item" |
+|editButtonText| Default text on edit button. | "Edit" |
+|saveButtonText| Default text on save button. | "Save" |
 |cancelButtonText| Default text on cancel button. | "Cancel" |
 |addButton| Show add item button or not. | true |
-|addButtonText| Default text on add item button. | "Add Item" |
+|addButtonText| Default text on add item button. | "Add" |
 |deleteButton| Show delete button or not. | true |
-|deleteButtonText| Default text on delete button. | "Delete Item" |
+|deleteButtonText| Default text on delete button. | "Delete" |
 |submitButton| Show submit button or not. | true |
 |submitButtonText| Default text on submit button. | "Submit" |
 |submitCallBack| Submit button callback. | function(){} |
