@@ -9,6 +9,7 @@ In oredr to build a sortable and editable list
 * Delete Item(s) from list
 * Edit Selected Item
 * Active/Inactive Item(s) in list
+* Reorder element in list using the mouse
 * Json Data Format
 
 ## Required
