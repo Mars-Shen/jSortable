@@ -475,14 +475,16 @@
 		 */
 		deleteFunction: function() {
 			if (!this.isBatchJob) {
-				if (typeof this.options.deleteCallBack == "function" && this.options.deleteCallBack(this.selectedItem)) {
-					if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
-						var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
-						this.deleteDataFromModel(foundRecord.id);
-						this.selectedItem.remove();
-						this.selectItemFunction(null);
+				if (typeof this.options.deleteCallBack == "function") {
+					if (this.options.deleteCallBack(this.selectedItem)) {
+						if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
+							var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
+							this.deleteDataFromModel(foundRecord.id);
+							this.selectedItem.remove();
+							this.selectItemFunction(null);
+						}
+						this.refreshData();
 					}
-					this.refreshData();
 				} else {
 					$.error("DeleteCallBack " + this.options.deleteCallBack + " is not a function!");
 				}
@@ -491,14 +493,16 @@
 				var allItems = this.getSelectItems();
 				var checkedItems = allItems.checkedItems;
 				var that = this;
-				if (typeof this.options.deleteCallBack == "function" && this.options.deleteCallBack(checkedItems)) {
-					$.each(checkedItems, function(index, v) {
-						var foundRecord = that.findDataFromModel($.trim(v.find(".hid_sortable_id").val()));
-						that.deleteDataFromModel(foundRecord.id);
-						v.remove();
-					});
-					this.selectNumber = 0;
-					this.batchModeButtonStatus();
+				if (typeof this.options.deleteCallBack == "function") {
+					if (this.options.deleteCallBack(checkedItems)) {
+						$.each(checkedItems, function(index, v) {
+							var foundRecord = that.findDataFromModel($.trim(v.find(".hid_sortable_id").val()));
+							that.deleteDataFromModel(foundRecord.id);
+							v.remove();
+						});
+						this.selectNumber = 0;
+						this.batchModeButtonStatus();
+					}
 				} else {
 					$.error("DeleteCallBack " + this.options.deleteCallBack + " is not a function!");
 				}
