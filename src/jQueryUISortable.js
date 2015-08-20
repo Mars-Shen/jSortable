@@ -78,17 +78,22 @@
 	SortTable.prototype = {
 
 		init: function() {
+			//destroy sortable object if it exit.
+			if (typeof this.sortableObj !== 'undefined' && this.sortableObj !== null) {
+				this.sortableObj.sortable("destroy");
+				this.sortableObj = null;
+			}
 			//init sortable
 			this.buildSortHTML();
 			this.buildSortTable();
 			this.refreshData();
 			var that = this;
 			//select item
-			$(this.element).on("click", "li", function() {
+			$(this.element).off("click", "li").on("click", "li", function() {
 				that.selectItemFunction($(this));
 			});
 			//submit button clicked
-			$(this.element).on("click", "#" + this.elementId + "_submit", function(event) {
+			$(this.element).off("click", "#" + this.elementId + "_submit").on("click", "#" + this.elementId + "_submit", function(event) {
 				if (typeof that.options.submitCallBack == "function") {
 					that.options.submitCallBack(event);
 				} else {
@@ -96,40 +101,40 @@
 				}
 			});
 			//active or inactive selected item
-			$(this.element).on("click", "#" + this.elementId + "_acitveInactiveItem", function() {
+			$(this.element).off("click", "#" + this.elementId + "_acitveInactiveItem").on("click", "#" + this.elementId + "_acitveInactiveItem", function() {
 				that.activeInactiveFunction();
 			});
 			//edit item
-			$(this.element).on("click", "#" + this.elementId + "_editItem", function() {
+			$(this.element).off("click", "#" + this.elementId + "_editItem").on("click", "#" + this.elementId + "_editItem", function() {
 				that.editFunction();
 			});
 			//save item
-			$(this.element).on("click", "#" + this.elementId + "_saveItem", function() {
+			$(this.element).off("click", "#" + this.elementId + "_saveItem").on("click", "#" + this.elementId + "_saveItem", function() {
 				that.saveFunction();
 			});
 			//Delete item
-			$(this.element).on("click", "#" + this.elementId + "_deleteItem", function() {
+			$(this.element).off("click", "#" + this.elementId + "_deleteItem").on("click", "#" + this.elementId + "_deleteItem", function() {
 				that.deleteFunction();
 			});
 			//Cancel item
-			$(this.element).on("click", "#" + this.elementId + "_cancelItem", function() {
+			$(this.element).off("click", "#" + this.elementId + "_cancelItem").on("click", "#" + this.elementId + "_cancelItem", function() {
 				that.cancelFunction();
 			});
 			//Batch Job
-			$(this.element).on("click", "#" + this.elementId + "_batchJob", function() {
+			$(this.element).off("click", "#" + this.elementId + "_batchJob").on("click", "#" + this.elementId + "_batchJob", function() {
 				that.batchJobFunction();
 			});
 			//Add Item
-			$(this.element).on("click", "#" + this.elementId + "_addItem", function() {
+			$(this.element).off("click", "#" + this.elementId + "_addItem").on("click", "#" + this.elementId + "_addItem", function() {
 				that.addItemFunction();
 			});
 			//normal mode
-			$(this.element).on("click", "#" + this.elementId + "_normalMode", function() {
+			$(this.element).off("click", "#" + this.elementId + "_normalMode").on("click", "#" + this.elementId + "_normalMode", function() {
 				that.normalModeFunction();
 			});
 
 			//bind checkbox click event
-			$(this.element).on("click", "input[type='checkbox']", function() {
+			$(this.element).off("click", "input[type='checkbox']").on("click", "input[type='checkbox']", function() {
 				if ($(this).prop("checked")) {
 					that.selectNumber++;
 				} else {
@@ -202,10 +207,6 @@
 		 *init jquery ui sortable
 		 */
 		buildSortTable: function() {
-			if (typeof this.sortableObj !== 'undefined' && this.sortableObj !== null) {
-				// this.sortableObj.sortable( "destroy" );
-				this.sortableObj = null;
-			}
 			var that = this;
 			var argOptions = {
 				placeholder: "ui-state-highlight",
@@ -219,7 +220,7 @@
 					that.refreshData();
 					ui.item.removeAttr("style");
 				}
-			}
+			};
 			if (this.options.groupMode) {
 				argOptions["connectWith"] = ".sortable_connectedSortable_" + this.elementId;
 				this.sortableObj = $(".sortable_connectedSortable_" + this.elementId).sortable(argOptions);
@@ -605,7 +606,7 @@
 		},
 		getButtonHtml: function(type) {
 			var sHtml = "";
-			var buttonClass = "ui-widget ui-button-text-only sortable_button_default ui-state-default" + this.options.buttonClass;
+			var buttonClass = "ui-widget ui-button-text-only sortable_button_default ui-state-default " + this.options.buttonClass;
 			switch (type) {
 				case "act":
 					sHtml = "<input type=\"button\" class=\"ui-state-disabled " + buttonClass + "\" id=\"" + this.elementId + "_acitveInactiveItem\" disabled=\"disabled\" value=\"" + this.options.activeButtonText + "\"/>";
