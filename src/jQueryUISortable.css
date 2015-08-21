@@ -48,12 +48,19 @@
 	.hide {
 		display : none;
 	}
+	.sortable_text_div_key{
+		float: left;
+		width: 40%;
+	}
+	.sortable_text_div_value{
+		float: left;
+		width: 60%;
+	}
 	.sortable_text_key{
-		width : 20% ;
+		width: inherit;
 	}
 	.sortable_text_value{
-		width : 40% ;
-		min-width: 100px;
+		width: inherit;
 	}
 
 	/*css for button group*/
@@ -137,12 +144,19 @@
 	.hide {
 		display : none;
 	}
+	.sortable_text_div_key{
+		float: left;
+		width: 40%;
+	}
+	.sortable_text_div_value{
+		float: left;
+		width: 60%;
+	}
 	.sortable_text_key{
-		width : 20% ;
+		width: inherit;
 	}
 	.sortable_text_value{
-		width : 40% ;
-		min-width: 100px;
+		width: inherit;
 	}
 
 	/*css for button group*/

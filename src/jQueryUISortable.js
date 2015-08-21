@@ -142,6 +142,43 @@
 				}
 				that.batchModeButtonStatus();
 			});
+			$(this.element).off("focus", ".hid_sortable_key").on("focus", ".hid_sortable_key", function() {
+				$(this).parents("span").find(".sortable_text_div_key").animate({
+					width: "90%"
+				}, 1000);
+				$(this).parents("span").find(".sortable_text_div_value").animate({
+					width: "0%",
+					opacity: 'hide'
+				}, 1000);
+			});
+			$(this.element).off("focusout", ".hid_sortable_key").on("focusout", ".hid_sortable_key", function() {
+				$(this).parents("span").find(".sortable_text_div_key").animate({
+					width: "40%"
+				}, 1000);
+				$(this).parents("span").find(".sortable_text_div_value").animate({
+					width: "60%",
+					opacity: 'show'
+				}, 1000);
+			});
+			$(this.element).off("focus", ".sortable_text_div_value").on("focus", ".sortable_text_div_value", function() {
+				$(this).parents("span").find(".sortable_text_div_key").animate({
+					width: "0%",
+					opacity: 'hide'
+				}, 1000);
+				$(this).parents("span").find(".sortable_text_div_value").animate({
+					width: "90%"
+				}, 1000);
+			});
+			$(this.element).off("focusout", ".sortable_text_div_value").on("focusout", ".sortable_text_div_value", function() {
+				$(this).parents("span").find(".sortable_text_div_key").animate({
+					width: "40%",
+					opacity: 'show'
+				}, 1000);
+				$(this).parents("span").find(".sortable_text_div_value").animate({
+					width: "60%"
+				}, 1000);
+			});
+
 		},
 		/*
 		 *prepare to init jquery ui sortable 
@@ -268,7 +305,7 @@
 				var flag = v.isActiveFlag;
 				var jqObj = $(that.element).find("#li_sortable_item_" + that.elementId + "_" + idStr);
 				if (jqObj.length == 0) {
-					var textString = that.getKeyValueString(keyStr, valueStr);
+					var textString = that.getKeyValueReadOnlyString(keyStr, valueStr);
 					var newItem = $("<li class=\"ui-state-default\" id=\"li_sortable_item_" + that.elementId + "_" + idStr + "\">" +
 						"<input type=\"checkbox\" class=\"li_sortable_checkbox hide\" id=\"li_sortable_checkbox_" + idStr + "\"/>" +
 						"<input type=\"hidden\" class=\"hid_sortable_id\" id=\"hid_sortable_id_" + idStr + "\" value=\"" + idStr + "\"/>" +
@@ -290,7 +327,8 @@
 				if (keyStr != itemkeyObj.val()) {
 					itemkeyObj.val(keyStr);
 				}
-				itemTextObj.html(that.getKeyValueString(keyStr, valueStr));
+				itemTextObj.html(that.getKeyValueReadOnlyString(keyStr, valueStr));
+				itemTextObj.attr("title", that.getKeyValueReadOnlyString(keyStr, valueStr));
 				//mark item depend on flag
 				if (flag) {
 					activedDataTemp.push($("#li_sortable_item_" + that.elementId + "_" + idStr));
@@ -718,7 +756,14 @@
 		}, //Delegate, this is invoked when user enter batch job mode and select nothing
 		getKeyValueString: function(key, value) {
 			if (this.options.keyValueMode) {
-				return "Key: " + key + ", Value: " + value;
+				return "<div class=\"sortable_text_div_key\">Key: " + key + " </div><div class=\"sortable_text_div_value\">Value: " + value + "</div>";
+			} else {
+				return value;
+			}
+		},
+		getKeyValueReadOnlyString: function(key, value) {
+			if (this.options.keyValueMode) {
+				return "Key: " + key + "    Value: " + value;
 			} else {
 				return value;
 			}
