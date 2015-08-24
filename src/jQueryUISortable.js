@@ -64,6 +64,8 @@
 		this.options = $.extend({}, defaults, options); //this.options.sortJsonData is using to store source data
 		this.activedData = [];
 		this.inactivedData = [];
+		this.newAddedItemsArr = [];
+		this.deletedItemsArr = [];
 		this.selectedItem = {};
 		this.isBatchJob = false;
 		this.isEditMode = false;
@@ -358,7 +360,9 @@
 				return {
 					sortJsonData: this.options.sortJsonData,
 					activedData: this.activedData,
-					inactivedData: this.inactivedData
+					inactivedData: this.inactivedData,
+					newAddedItems: this.newAddedItemsArr,
+					deletedItems: this.deletedItemsArr
 				};
 			}
 		},
@@ -513,6 +517,7 @@
 		 *delete function
 		 */
 		deleteFunction: function() {
+			var that = this;
 			if (!this.isBatchJob) {
 				if (typeof this.options.deleteCallBack == "function") {
 					if (this.options.deleteCallBack(this.selectedItem)) {
@@ -521,6 +526,17 @@
 							this.deleteDataFromModel(foundRecord.id);
 							this.selectedItem.remove();
 							this.selectItemFunction(null);
+							var isNewAddedItem = false;
+							$.each(that.newAddedItemsArr, function(i, v) {
+								if (v.id == foundRecord.id) {
+									that.newAddedItemsArr.splice(i, 1);
+									isNewAddedItem = true;
+									return false;
+								}
+							});
+							if (!isNewAddedItem) {
+								this.deletedItemsArr.push(foundRecord);
+							}
 						}
 						this.refreshData();
 					}
@@ -538,6 +554,17 @@
 							var foundRecord = that.findDataFromModel($.trim(v.find(".hid_sortable_id").val()));
 							that.deleteDataFromModel(foundRecord.id);
 							v.remove();
+							var isNewAddedItem = false;
+							$.each(that.newAddedItemsArr, function(i, v) {
+								if (v.id == foundRecord.id) {
+									that.newAddedItemsArr.splice(i, 1);
+									isNewAddedItem = true;
+									return false;
+								}
+							});
+							if (!isNewAddedItem) {
+								that.deletedItemsArr.push(foundRecord);
+							}
 						});
 						this.selectNumber = 0;
 						this.batchModeButtonStatus();
@@ -558,8 +585,10 @@
 				startIndex = this.options.sortJsonData.length;
 			}
 			var id = startIndex++;
-			this.options.sortJsonData.push(this.getOneItemJsonObj(this.options.defaultNewItemKey, id, this.options.enableNewItem, this.options.defaultNewItemText));
+			var addItemModel = this.getOneItemJsonObj(this.options.defaultNewItemKey, id, this.options.enableNewItem, this.options.defaultNewItemText);
+			this.options.sortJsonData.push(addItemModel);
 			var newItems = this.refreshData();
+			this.newAddedItemsArr.push(addItemModel);
 			this.selectItemFunction(newItems[0]);
 			this.editFunction();
 			this.startIndex = startIndex;
