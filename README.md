@@ -124,7 +124,9 @@ Json based data structure from `ModelData` medthod:
 	{
 		sortJsonData : [{key:,isActiveFlag:,value}],//list's data source array, json based.
 		activedData : [],//active data in list
-		inactivedData : []//inactiva data in list
+		inactivedData : [],//inactiva data in list
+		newAddedItems: [],//added items
+		deletedItems: []//deleted items
 	};
 ```
 You can aslo reset the `options` source into this plugin,
