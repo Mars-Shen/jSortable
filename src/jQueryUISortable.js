@@ -357,13 +357,17 @@
 				this.options = $.extend({}, this.options, newOptions); //this.options.sortJsonData is using to store source data
 				this.init();
 			} else {
-				return {
+				//deepcopy for this data.
+				var returnObj = JSON.parse(JSON.stringify({
 					sortJsonData: this.options.sortJsonData,
 					activedData: this.activedData,
 					inactivedData: this.inactivedData,
 					newAddedItems: this.newAddedItemsArr,
 					deletedItems: this.deletedItemsArr
-				};
+				}));
+				this.newAddedItemsArr = [];
+				this.deletedItemsArr = [];
+				return returnObj;
 			}
 		},
 		/**
