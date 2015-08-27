@@ -4,6 +4,8 @@ This is a plugin extend from [jQuery Ui](http://jqueryui.com/sortable/) Sortable
 
 In oredr to build a sortable and editable list
 
+code in branch V1BackUp
+
 ## What We Can Do
 * Add Item to list
 * Delete Item(s) from list
