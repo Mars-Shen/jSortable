@@ -1,138 +1,190 @@
-.ui-state-highlight {
-	height:auto;
-	line-height: auto;
+@media screen and (min-width: 500px) {
+	/*ul element css*/
+	.sortable_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 46% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 1.5%;
+		overflow: auto;
+		height: 290px;
+	}
+	/*ul element css*/
+	.sortable_single_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 95% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 2%;
+		overflow: auto;
+		height: 290px;
+	}
+	.sortable_default li,
+	.sortable_single_default li {
+		margin : 0 5px 5px 5px;
+		padding : 5px;
+		font-size : 1.2em;
+		height : 1.5em;
+		line-height : 1.2em;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.ui-state-highlight {
+		height : 1.5em;
+		line-height : 1.2em;
+	}
+	.hide {
+		display : none;
+	}
+	.sortable_text_div_key{
+		float: left;
+		width: 40%;
+	}
+	.sortable_text_div_value{
+		float: left;
+		width: 60%;
+	}
+	.sortable_text_key{
+		width: inherit;
+	}
+	.sortable_text_value{
+		width: inherit;
+	}
+
+	/*css for button group*/
+	.sortable_button_group_default{
+		width: 19%;
+		max-width: 100px;
+		height: 290px;
+		float: left;
+
+	}
+	/*css for button*/
+	.sortable_button_default{
+		width: 100%;
+		max-width: 100px;
+		float: left;
+		padding: .5em .2em;
+		margin: 0 0 .3em 0;
+	}
+	/*sortable list container*/
+	/*sortable list container for single mode*/
+	.sortable_list_container,
+	.sortable_list_single_container{
+		width:80%;
+		height: 300px;
+		float: left;
+	}
+	/*user div container css*/
+	.sortable_div_container{
+		max-width: 700px;
+		height: 300px;
+	}
 }
 
-.hide {
-	display: none;
-}
-.sortable_CheckBox_Style{
-	width:5%;
-}
-.sortable_Code_Style{
-	width:25%
-}
-.sortable_Descrption_Style{
-	width:45%
-}
-.ui-state-default {
-    background-color: white;
-}
+@media screen and (max-width: 500px) {
+	/*ul element css*/
+	.sortable_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 97% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 2%;
+		overflow: auto;
+		height: 290px;
+	}
+	/*ul element css*/
+	.sortable_single_default {
+		list-style-type : none;
+		margin : 0;
+		padding : 0;
+		width : 97% ;
+		min-width: 100px;
+		border: 1px solid #eee;
+		min-height: 20px;
+		list-style-type: none;
+		padding: 5px 0 0 0;
+		float: left;
+		margin: 0 2%;
+		overflow: auto;
+		height: 290px;
+	}
+	.sortable_default li,
+	.sortable_single_default li {
+		margin : 0 5px 5px 5px;
+		padding : 5px;
+		font-size : 1.2em;
+		height : 1.5em;
+		line-height : 1.2em;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.ui-state-highlight {
+		height : 1.5em;
+		line-height : 1.2em;
+	}
+	.hide {
+		display : none;
+	}
+	.sortable_text_div_key{
+		float: left;
+		width: 40%;
+	}
+	.sortable_text_div_value{
+		float: left;
+		width: 60%;
+	}
+	.sortable_text_key{
+		width: inherit;
+	}
+	.sortable_text_value{
+		width: inherit;
+	}
 
-.sortable_text_div_key {
-	
-}
+	/*css for button group*/
+	.sortable_button_group_default{
+		width: 19%;
+		max-width: 100px;
+		height: 290px;
+		float: left;
 
-.sortable_text_div_value {
-	
-}
-
-.sortable_text_key {
-	
-}
-
-.sortable_text_value {
-	
-}
-/*css for button group*/
-.sortable_button_group_default {
-	padding-left: 0;
-}
-/*css for button*/
-.sortable_button_default {
-	
-}
-/*user div container css*/
-.sortable_div_container {
-	max-height: 400px;
-}
-
-.ui-state-disabled {
-	background-color: rgba(225,225,225,0.3);
-	color: rgba(1,1,1,0.3);
-	/* support: IE8; */
-	background-image: none;
-}
-.action-menu li .btn {
-	-webkit-border-radius: 0px;
-    border-radius: 0px;
-    display: block;
-    border: none;
-    padding: .5em 1em;
-    font-family: Verdana, sans-serif;
-    font-size: 10px;
-    line-height: 14px;
-    color: #fff;
-    text-transform: uppercase;
-}
-.btn.btn-inactive {
-    background-color: #bfbfbf;
-}
-ol, ul {
-    list-style: none;
-}
-.action-menu:after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 4px;
-    width: 0;
-    height: 0;
-    border-top: 5px solid #434c53;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
-}
-
-.action-menu {
-    display: inline-block;
-    position: relative;
-    margin-bottom: 0;
-}
-.action-menu li {
-    background-color: #434c53;
-    float: left;
-    border-left: 1px solid #d5d9d8;
-}
-.action-menu li .btn.btn-primary:hover {
-    background-color: #434c53;
-    text-decoration: underline;
-    color: #fff;
-}
-.action-menu li .btn.btn-primary {
-    background-color: #434c53;
-}
-.btn {
-    -webkit-border-radius: 0px;
-    border-radius: 0px;
-    border: none;
-    margin-bottom: 0;
-    font-weight: normal;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    background-image: none;
-    white-space: nowrap;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857;
-    border-radius: 4px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-}
-.btn.btn-primary:hover {
-    background-color: #404040;
-    text-decoration: none;
-}
-.btn.btn-primary {
-    background-color: #000;
-    color: #fff;
-    border: none;
-}
-.btn-primary:focus, .btn-primary:active, .btn-primary.active {
-    color: #fff;
-    background-color: #404040;
-    border-color: none;
-}
+	}
+	/*css for button*/
+	.sortable_button_default{
+		width: 100%;
+		max-width: 100px;
+		float: left;
+		padding: .5em .2em;
+		margin: 0 0 .3em 0;
+	}
+	/*sortable list container*/
+	/*sortable list container for single mode*/
+	.sortable_list_container,
+	.sortable_list_single_container{
+		width:80%;
+		height: 600px;
+		float: left;
+	}
+	/*user div container css*/
+	.sortable_div_container{
+		max-width: 700px;
+		height: 300px;
+	}
