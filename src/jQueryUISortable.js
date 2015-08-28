@@ -36,7 +36,7 @@
 			enableNewItem: false, //if this option is true, new item which you added will be enable. default is false.
 			defaultNewItemKey: "NK", //default new item's key
 			defaultNewItemText: "new value", //default new item's value
-			sortJsonData: [], //table's data array, json based. [{key:,isActiveFlag:,value}].
+			sortJsonData: [], //table's data array, json based. [{index:,key:,isActiveFlag:,value:}].
 			activeButton: true, //show active/inactive button or not, default is true.
 			inlineActiveButton: false, //show inline active/inactive button or not, default is true.
 			activeButtonText: "Active/Inactive", //text on active button.
@@ -588,6 +588,7 @@
 								that.changeEditModeButtonsStatus(e);
 								that.refreshData();
 								if (foundRecord.newAddedFlag) {
+									that.newAddedItemsArr.push(foundRecord);
 									delete foundRecord["newAddedFlag"];
 								}
 								alert("Update sucessful!");
@@ -615,6 +616,7 @@
 					}
 					this.refreshData();
 					if (foundRecord.newAddedFlag) {
+						this.newAddedItemsArr.push(foundRecord);
 						delete foundRecord["newAddedFlag"];
 					}
 				}
@@ -824,9 +826,11 @@
 			var addItemModel = this.getOneItemJsonObj(this.options.defaultNewItemKey, this.options.sortJsonData.length + 1, id, this.options.enableNewItem, this.options.defaultNewItemText, true);
 			this.options.sortJsonData.push(addItemModel);
 			var newItems = this.refreshData();
-			//			this.newAddedItemsArr.push(addItemModel);
 			this.editFunction(newItems[0]);
 			this.startIndex = startIndex;
+			$(this.tableBodyElement).animate({
+				scrollTop: '800px'
+			}, 300);
 		},
 		/**
 		 *Get a new json data
@@ -909,6 +913,7 @@
 			//add id to every records
 			var count = 0;
 			var index = 1;
+			this.options.sortJsonData.sort(this.sortBy('index', false, parseInt));
 			$.each(this.options.sortJsonData, function(i, value) {
 				value.id = count++;
 				value.index = index++;
@@ -945,6 +950,24 @@
 			$("#" + this.elementId + "_deleteItems").addClass("btn-inactive").removeClass("btn-primary");
 			$("#" + this.elementId + "_acitveInactiveItems").addClass("btn-inactive").removeClass("btn-primary");
 		}, //Delegate, this is invoked when user enter batch job mode and select nothing
+		sortBy: function(filed, rev, primer) {
+			rev = (rev) ? -1 : 1;
+			return function(a, b) {
+				a = a[filed];
+				b = b[filed];
+				if (typeof(primer) != 'undefined') {
+					a = primer(a);
+					b = primer(b);
+				}
+				if (a < b) {
+					return rev * -1;
+				}
+				if (a > b) {
+					return rev * 1;
+				}
+				return 1;
+			};
+		},
 	};
 
 	//interal method
