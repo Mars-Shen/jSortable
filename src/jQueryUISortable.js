@@ -38,6 +38,7 @@
 			defaultNewItemText: "new value", //default new item's value
 			sortJsonData: [], //table's data array, json based. [{key:,isActiveFlag:,value}].
 			activeButton: true, //show active/inactive button or not, default is true.
+			inlineActiveButton: false, //show inline active/inactive button or not, default is true.
 			activeButtonText: "Active/Inactive", //text on active button.
 			//batch job group
 			batchMode: true, //show checkbox or not, default is true.
@@ -49,6 +50,7 @@
 			addButton: true, //show add item button or not, default is true.
 			addButtonText: "Add", //text on add item button.
 			deleteButton: true, //show delete button or not, default is true.
+			inlineDeleteButton: false, //show inline delete button or not, default is true.
 			deleteButtonText: "Delete", //text on delete button.
 			saveOrderButton: true, //show submit button or not, default is true.
 			saveOrderButtonText: "Save Order", //text on submit button.
@@ -71,7 +73,6 @@
 		this.inactivedData = [];
 		this.newAddedItemsArr = [];
 		this.deletedItemsArr = [];
-		this.selectedItem = {};
 		this.isEditMode = false;
 		this.selectNumber = 0;
 		this._defaults = defaults;
@@ -206,11 +207,13 @@
 				buttonElements.append($(this.getButtonHtml("sub")));
 			}
 			var table = $('<table class="table responsivetable sortable_div_container" id="table_' + this.elementId + '"></table>');
-			var thead = $('<thead id="table_head_' + this.elementId + '"><tr></tr></thead>');
+			var thead = $('<thead id="table_head_' + this.elementId + '" class="sortable_Thead_Style"></thead>');
+			var theadTr = $('<tr class="sortable_Thead_Tr_Style"></tr>');
+			thead.append(theadTr);
 			table.append(thead);
 			if (this.options.batchMode) {
-				var checkAllBox = $('<th class="sortable_CheckBox_Style"><div class="checkbox"><input type="checkbox" class="checkAll" id="check_all_' + this.elementId + '"/></div></th>');
-				thead.append(checkAllBox);
+				var checkAllBox = $('<th class="sortable_CheckBox_Style"><div><input type="checkbox" class="checkAll" id="check_all_' + this.elementId + '"/></div></th>');
+				theadTr.append(checkAllBox);
 			}
 			var codeDescHead = "";
 			if (this.options.keyValueMode) {
@@ -218,9 +221,9 @@
 			} else {
 				codeDescHead = '<th class="sortable_Descrption_Style">Descrption</th>';
 			}
-			var otherHead = $('<th class="sortable_CheckBox_Style">No.</th>' + codeDescHead + '<th>Operation</th>');
-			thead.append(otherHead);
-			var tbody = $('<tbody id="table_body_' + this.elementId + '"></tbody>');
+			var otherHead = $('<th class="sortable_CheckBox_Style">No.</th>' + codeDescHead + '<th class="sortable_Operation_Style">Operation</th>');
+			theadTr.append(otherHead);
+			var tbody = $('<tbody id="table_body_' + this.elementId + '"  class="sortable_Tbody_Style"></tbody>');
 			table.append(tbody);
 			this.tableBodyElement = tbody;
 			element.append(table);
@@ -302,21 +305,21 @@
 						saveButtonHtml = that.getButtonHtml("sav");
 						cancelButtonHtml = that.getButtonHtml("can");
 					}
-					if (that.options.deleteButton) {
+					if (that.options.deleteButton && that.options.inlineDeleteButton) {
 						deleteButtonHtml = that.getButtonHtml("del");
 					}
-					if (that.options.deleteButton) {
+					if (that.options.activeButton && that.options.inlineActiveButton) {
 						activeButtonHtml = that.getButtonHtml("act");
 					}
 					if (that.options.batchMode) {
 						checkboxHtml = "<td class=\"sortable_CheckBox_Style\"><input type=\"checkbox\" class=\"td_sortable_checkbox\" id=\"td_sortable_checkbox_" + idStr + "\"/></td>";
 					}
 
-					var newItem = $("<tr class=\"ui-state-default\" id=\"tr_sortable_item_" + that.elementId + "_" + idStr + "\">" +
+					var newItem = $("<tr class=\"ui-state-default sortable_Tbody_Tr_Style\" id=\"tr_sortable_item_" + that.elementId + "_" + idStr + "\">" +
 						checkboxHtml +
 						"<td class=\"sortable_index sortable_CheckBox_Style\">" + vIndex + "</td>" +
 						codeDescTD +
-						"<td>" +
+						"<td class=\"sortable_Operation_Style\">" +
 						editButtonHtml + saveButtonHtml + cancelButtonHtml + deleteButtonHtml + activeButtonHtml +
 						"<input type=\"hidden\" class=\"hid_sortable_id\" id=\"hid_sortable_id_" + idStr + "\" value=\"" + idStr + "\"/></td>" +
 						"</tr>");
@@ -362,12 +365,12 @@
 				jqObj.addClass("sortable-processed");
 			});
 			//delete out of data record
-			$(this.element).find("tr").remove(":not(.sortable-processed)");
-			$(this.element).find("tr").removeClass("sortable-processed");
+			$(this.tableBodyElement).find("tr").remove(":not(.sortable-processed)");
+			$(this.tableBodyElement).find("tr").removeClass("sortable-processed");
 			this.refreshItemsDisplay();
 			return newAddedItems;
 		},
-		/*
+		/**
 		 *get or set model data
 		 */
 		getOrSetModelData: function(newOptions) {
@@ -395,9 +398,9 @@
 		activeInactiveFunction: function(e, isBatch) {
 			var that = this;
 			if (!isBatch) {
-				this.selectedItem = $(e.target).parents("tr");
-				if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
-					var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
+				var selectedItem = $(e.target).parents("tr");
+				if (typeof selectedItem !== 'undefined' && selectedItem !== null) {
+					var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
 					if (this.options.onlineMode && this.options.activeURL != "") {
 						this.options.blockfunction();
 						var rec = [];
@@ -529,25 +532,31 @@
 		editFunction: function(e, v) {
 			this.isEditMode = true;
 			this.changeEditModeButtonsStatus(e);
-			this.selectedItem = $(e.target).parents("tr");
-			var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
-			this.selectedItem.find(".hid_sortable_value").val(foundRecord.value);
-			this.selectedItem.find(".sortable_read_only_text").hide();
-			this.selectedItem.find(".hid_sortable_value").show().removeClass("hide");
+			var selectedItem = null;
+			if (!$(e).is("tr")) {
+				selectedItem = $(e.target).parents("tr");
+			} else {
+				selectedItem = $(e);
+			}
+			var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
+			selectedItem.find(".hid_sortable_value").val(foundRecord.value);
+			selectedItem.find(".sortable_read_only_text").hide();
+			selectedItem.find(".hid_sortable_value").show().removeClass("hide");
 			if (this.options.keyValueMode) {
-				this.selectedItem.find(".hid_sortable_key").val(foundRecord.key);
-				this.selectedItem.find(".sortable_read_only_key").hide();
-				this.selectedItem.find(".hid_sortable_key").show().removeClass("hide");
+				selectedItem.find(".hid_sortable_key").val(foundRecord.key);
+				selectedItem.find(".sortable_read_only_key").hide();
+				selectedItem.find(".hid_sortable_key").show().removeClass("hide");
 			}
 		},
 		/**
 		 *Save
 		 */
 		saveFunction: function(e, v) {
-			if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
-				var valueStr = $.trim(this.selectedItem.find(".hid_sortable_value").val());
-				var keyStr = $.trim(this.selectedItem.find(".hid_sortable_key").val());
-				var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
+			var selectedItem = $(e.target).parents("tr");
+			if (typeof selectedItem !== 'undefined' && selectedItem !== null) {
+				var valueStr = $.trim(selectedItem.find(".hid_sortable_value").val());
+				var keyStr = $.trim(selectedItem.find(".hid_sortable_key").val());
+				var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
 				if (this.options.onlineMode && this.options.saveURL != "") {
 					var tempKey = foundRecord.key;
 					var tempValue = foundRecord.value;
@@ -567,18 +576,20 @@
 						},
 						success: function(data) {
 							if (data.status == 'success') {
-								that.selectedItem.find(".hid_sortable_value").val(foundRecord.value);
-								that.selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
-								that.selectedItem.find(".hid_sortable_value").hide().addClass("hide");
+								selectedItem.find(".hid_sortable_value").val(foundRecord.value);
+								selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
+								selectedItem.find(".hid_sortable_value").hide().addClass("hide");
 								if (that.options.keyValueMode) {
-									that.selectedItem.find(".hid_sortable_key").val(foundRecord.key);
-									that.selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
-									that.selectedItem.find(".hid_sortable_key").hide().addClass("hide");
+									selectedItem.find(".hid_sortable_key").val(foundRecord.key);
+									selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
+									selectedItem.find(".hid_sortable_key").hide().addClass("hide");
 								}
 								that.isEditMode = false;
 								that.changeEditModeButtonsStatus(e);
 								that.refreshData();
-								that.selectedItem = null;
+								if (foundRecord.newAddedFlag) {
+									delete foundRecord["newAddedFlag"];
+								}
 								alert("Update sucessful!");
 							} else {
 								foundRecord.value = tempValue;
@@ -594,21 +605,20 @@
 					this.changeEditModeButtonsStatus(e);
 					foundRecord.value = valueStr;
 					foundRecord.key = keyStr;
-					this.selectedItem.find(".hid_sortable_value").val(foundRecord.value);
-					this.selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
-					this.selectedItem.find(".hid_sortable_value").hide().addClass("hide");
+					selectedItem.find(".hid_sortable_value").val(foundRecord.value);
+					selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
+					selectedItem.find(".hid_sortable_value").hide().addClass("hide");
 					if (this.options.keyValueMode) {
-						this.selectedItem.find(".hid_sortable_key").val(foundRecord.key);
-						this.selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
-						this.selectedItem.find(".hid_sortable_key").hide().addClass("hide");
+						selectedItem.find(".hid_sortable_key").val(foundRecord.key);
+						selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
+						selectedItem.find(".hid_sortable_key").hide().addClass("hide");
 					}
 					this.refreshData();
-					this.selectedItem = null;
+					if (foundRecord.newAddedFlag) {
+						delete foundRecord["newAddedFlag"];
+					}
 				}
 			}
-
-
-
 		},
 		/**
 		 *Cancel
@@ -616,19 +626,29 @@
 		cancelFunction: function(e, v) {
 			this.isEditMode = false;
 			this.changeEditModeButtonsStatus(e);
-			if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
-				var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
-				this.selectedItem.find(".hid_sortable_value").val(foundRecord.value);
-				this.selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
-				this.selectedItem.find(".hid_sortable_value").hide().addClass("hide");
-				if (this.options.keyValueMode) {
-					this.selectedItem.find(".hid_sortable_key").val(foundRecord.key);
-					this.selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
-					this.selectedItem.find(".hid_sortable_key").hide().addClass("hide");
+			var selectedItem = null;
+			if (!$(e).is("tr")) {
+				selectedItem = $(e.target).parents("tr");
+			} else {
+				selectedItem = $(e);
+			}
+			if (typeof selectedItem !== 'undefined' && selectedItem !== null) {
+				var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
+				if (foundRecord.newAddedFlag) {
+					this.deleteDataFromModel(foundRecord.id);
+					selectedItem.remove();
+				} else {
+					selectedItem.find(".hid_sortable_value").val(foundRecord.value);
+					selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
+					selectedItem.find(".hid_sortable_value").hide().addClass("hide");
+					if (this.options.keyValueMode) {
+						selectedItem.find(".hid_sortable_key").val(foundRecord.key);
+						selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
+						selectedItem.find(".hid_sortable_key").hide().addClass("hide");
+					}
 				}
 			}
 			this.refreshData();
-			this.selectedItem = null;
 		},
 		/**
 		 *Delete data from sortModelData
@@ -653,9 +673,9 @@
 			if (typeof this.options.deleteCallBack == "function") {
 				if (this.options.deleteCallBack(this.selectedItem)) {
 					if (!isBatch) {
-						this.selectedItem = $(e.target).parents("tr");
-						if (typeof this.selectedItem !== 'undefined' && this.selectedItem !== null) {
-							var foundRecord = this.findDataFromModel($.trim(this.selectedItem.find(".hid_sortable_id").val()));
+						var selectedItem = $(e.target).parents("tr");
+						if (typeof selectedItem !== 'undefined' && selectedItem !== null) {
+							var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
 							if (this.options.onlineMode && this.options.deleteURL != "") {
 								this.options.blockfunction();
 								var rec = [];
@@ -673,7 +693,7 @@
 									success: function(data) {
 										if (data.status == 'success') {
 											that.deleteDataFromModel(foundRecord.id);
-											that.selectedItem.remove();
+											selectedItem.remove();
 											var isNewAddedItem = false;
 											$.each(that.newAddedItemsArr, function(i, v) {
 												if (v.id == foundRecord.id) {
@@ -685,8 +705,9 @@
 											if (!isNewAddedItem) {
 												that.deletedItemsArr.push(foundRecord);
 											}
+											that.recordNewOrder();
 											that.refreshData();
-											that.selectedItem = null;
+											selectedItem = null;
 											alert("Delete sucessful!");
 										} else {
 											if (data.message) {
@@ -697,7 +718,7 @@
 								});
 							} else {
 								this.deleteDataFromModel(foundRecord.id);
-								this.selectedItem.remove();
+								selectedItem.remove();
 								var isNewAddedItem = false;
 								$.each(that.newAddedItemsArr, function(i, v) {
 									if (v.id == foundRecord.id) {
@@ -709,6 +730,7 @@
 								if (!isNewAddedItem) {
 									this.deletedItemsArr.push(foundRecord);
 								}
+								that.recordNewOrder();
 								this.refreshData();
 								this.selectedItem = null;
 							}
@@ -767,8 +789,8 @@
 												that.deletedItemsArr.push(value);
 											}
 										});
+										that.recordNewOrder();
 										that.refreshData();
-										that.selectedItem = null;
 										alert("Delete sucessful!");
 									} else {
 										if (data.message) {
@@ -778,8 +800,8 @@
 								}
 							});
 						} else {
+							that.recordNewOrder();
 							that.refreshData();
-							that.selectedItem = null;
 						}
 						this.selectNumber = 0;
 						this.batchModeButtonStatus();
@@ -794,29 +816,29 @@
 		 */
 		addItemFunction: function() {
 			var startIndex = this.startIndex;
-			//mark sure startIndex is larger than the length of sortJsonData
+			//make sure startIndex is larger than the length of sortJsonData
 			if (startIndex < this.options.sortJsonData.length) {
 				startIndex = this.options.sortJsonData.length;
 			}
-			var id = startIndex++;
-			var addItemModel = this.getOneItemJsonObj(this.options.defaultNewItemKey, id, this.options.enableNewItem, this.options.defaultNewItemText);
+			var id = ++startIndex;
+			var addItemModel = this.getOneItemJsonObj(this.options.defaultNewItemKey, this.options.sortJsonData.length + 1, id, this.options.enableNewItem, this.options.defaultNewItemText, true);
 			this.options.sortJsonData.push(addItemModel);
 			var newItems = this.refreshData();
-			this.newAddedItemsArr.push(addItemModel);
-			this.selectItemFunction(newItems[0]);
-			this.editFunction();
+			//			this.newAddedItemsArr.push(addItemModel);
+			this.editFunction(newItems[0]);
 			this.startIndex = startIndex;
 		},
 		/**
 		 *Get a new json data
 		 */
-		getOneItemJsonObj: function(keyStr, idStr, isActiveFlag, valueStr) {
+		getOneItemJsonObj: function(keyStr, index, idStr, isActiveFlag, valueStr, newAddedFlag) {
 			return {
-				index: idStr,
+				index: index,
 				id: idStr,
 				key: keyStr,
 				isActiveFlag: isActiveFlag,
-				value: valueStr
+				value: valueStr,
+				newAddedFlag: newAddedFlag
 			};
 		},
 		//auxiliary function
@@ -894,11 +916,19 @@
 			this.startIndex = count;
 		},
 		enterEditModeButtonsStatusDelegate: function(trItem) {
-			$(trItem.target).parents("td").find("." + this.elementId + "_saveItem").show().removeClass("hide");
-			$(trItem.target).parents("td").find("." + this.elementId + "_cancelItem").show().removeClass("hide");
-			$(trItem.target).parents("td").find("." + this.elementId + "_deleteItem").hide().addClass("hide");
-			$(trItem.target).parents("td").find("." + this.elementId + "_acitveInactiveItem").hide().addClass("hide");
-			$(trItem.target).hide().addClass("hide");
+			if ($(trItem).is("tr")) {
+				$(trItem).find("." + this.elementId + "_saveItem").show().removeClass("hide");
+				$(trItem).find("." + this.elementId + "_cancelItem").show().removeClass("hide");
+				$(trItem).find("." + this.elementId + "_deleteItem").hide().addClass("hide");
+				$(trItem).find("." + this.elementId + "_acitveInactiveItem").hide().addClass("hide");
+				$(trItem).find("." + this.elementId + "_editItem").hide().addClass("hide");
+			} else {
+				$(trItem.target).parents("td").find("." + this.elementId + "_saveItem").show().removeClass("hide");
+				$(trItem.target).parents("td").find("." + this.elementId + "_cancelItem").show().removeClass("hide");
+				$(trItem.target).parents("td").find("." + this.elementId + "_deleteItem").hide().addClass("hide");
+				$(trItem.target).parents("td").find("." + this.elementId + "_acitveInactiveItem").hide().addClass("hide");
+				$(trItem.target).hide().addClass("hide");
+			}
 		}, //Delegate, this is invoked when user enter edit mode
 		exitEditModeButtonsStatusDelegate: function(trItem) {
 			$(trItem.target).parents("td").find("." + this.elementId + "_saveItem").hide().addClass("hide");

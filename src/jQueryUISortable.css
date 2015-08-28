@@ -1,6 +1,4 @@
 .ui-state-highlight {
-	height:auto;
-	line-height: auto;
 }
 
 .hide {
@@ -10,13 +8,29 @@
 	width:5%;
 }
 .sortable_Code_Style{
-	width:25%
+	width:25%;
 }
 .sortable_Descrption_Style{
-	width:45%
+	width:45%;
 }
-.ui-state-default {
-    background-color: white;
+.sortable_Operation_Style{
+	width:25%;
+}
+.sortable_Thead_Style{
+	display:block;
+}
+.sortable_Tbody_Style{
+	display: block;
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.sortable_Tbody_Tr_Style{
+	display: flex;
+}
+
+.sortable_Thead_Tr_Style{
+	display: flex;
 }
 
 .sortable_text_div_key {
@@ -30,7 +44,9 @@
 .sortable_text_key {
 	
 }
-
+.ui-state-default {
+    background-color: white;
+}
 .sortable_text_value {
 	
 }
@@ -44,7 +60,7 @@
 }
 /*user div container css*/
 .sortable_div_container {
-	max-height: 400px;
+	width: 100%;
 }
 
 .ui-state-disabled {
@@ -135,4 +151,19 @@ ol, ul {
     color: #fff;
     background-color: #404040;
     border-color: none;
+}
+th {
+    border-color: #8a93a2;
+    padding-bottom: 8px;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+    padding: 8px;
+    line-height: 1.42857;
+    vertical-align: top;
+    border-bottom: 1px solid #ddd;
 }
