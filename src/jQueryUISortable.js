@@ -23,7 +23,7 @@
 		version = "v0.0.2",
 		defaults = {
 			//online mode necessary group
-			onlineMode: true, //Add or delete function will process on sever side.
+			onlineMode: false, //Add or delete function will process on sever side.
 			saveURL: "", //save function ajax url, if onlineMode is true, this url must be not null.
 			deleteURL: "", //delete function ajax url, if onlineMode is true, this url must be not null.
 			activeURL: "", //active function ajax url, if onlineMode is true, this url must be not null.
