@@ -235,7 +235,6 @@
 		buildSortTable: function() {
 			var that = this;
 			var argOptions = {
-				placeholder: "ui-state-highlight",
 				axis: "y",
 				cursor: "s-resize",
 				opacity: 0.8,
@@ -866,10 +865,6 @@
 
 		},
 		refreshItemsDisplay: function() {
-			//			//enable these Items.
-			//			this.sortableObj.sortable("option", "items", "tr:not(.ui-state-disabled)");
-			//			//disable these Items
-			//			this.sortableObj.sortable("option", "cancel", ".ui-state-disabled,input");
 			this.sortableObj.sortable("option", "items", "tr");
 			this.sortableObj.sortable("refresh");
 		},
@@ -893,7 +888,7 @@
 					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_deleteItem " + buttonClass + "\" value=\"" + this.options.deleteButtonText + "\"/>";
 					break;
 				case "sub":
-					sHtml = "<li><input type=\"button\" class=\"btn-inactive " + buttonClass + "\" id=\"" + this.elementId + "_saveOrder\" value=\"" + this.options.saveOrderButtonText + "\"/></li>";
+					sHtml = "<li><input type=\"button\" class=\"btn-primary " + buttonClass + "\" id=\"" + this.elementId + "_saveOrder\" value=\"" + this.options.saveOrderButtonText + "\"/></li>";
 					break;
 				case "edi":
 					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_editItem " + buttonClass + "\" value=\"" + this.options.editButtonText + "\"/>";
