@@ -47,23 +47,23 @@ var options = {
 		defaultNewItemText:"New Item",
   		sortJsonData :  //list's data source array, json based. [{key:,isActiveFlag:,value}],
   		[{
-  				id : 1,                 //Must, unique id
   				index : 1,		//Must, order in data sequence
   				isActiveFlag : false,   //Must, active flag
-  				value : "item 1",       //Must, value of this item
+  				value : "item 1",       //Must, value of this key value pair.
+  				key : 1,                 //Optional if keyValueMode is false, it's the key of key value pair.
   				primaryKey : 1543       //Optional, mapping your own bussiness logic, like if you want to store a primaryKey of database, you can put it here.
   			}, {
-  				id : 2,
+  				key : 2,
   				index : 2,
   				isActiveFlag : true,
   				value : "item 2"
   			}, {
-  				id : 3,
+  				key : 3,
   				index : 3,
   				isActiveFlag : false,
   				value : "item 3"
   			}, {
-  				id : 4,
+  				key : 4,
   				index : 4,
   				isActiveFlag : true,
   				value : "item 4"
