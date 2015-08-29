@@ -151,11 +151,12 @@ You can aslo reset the `options` source into this plugin,
 
 you can find a demo in this project *demo* folder.
 
+[Live Demo](http://www.marsshen.com/others/jSortable/demo/SortableDemo/)
+
 ## Screenshot
 Group Mode Demo
 ![Group Mode Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo_group_mode.gif)
-Single Mode Demo
-![Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo.gif)
+
 
 ##License
 Licensed under the MIT License
