@@ -87,6 +87,7 @@ This form show all `options`:
 |defaultNewItemText| Default new item's value | "new value" |
 |sortJsonData| List's source data array, json based. [{id:,isActiveFlag:,value}].| [] |
 |activeButton| Show active/inactive button or not. | true |
+|inlineActiveButton| Show inline active/inactive button or not. | false |
 |activeButtonText| Default text on active button. | "Active/Inactive" |
 |batchMode| show checkbox or not. | true |
 |editButton| Show edit button or not. | true |
@@ -96,6 +97,7 @@ This form show all `options`:
 |addButton| Show add item button or not. | true |
 |addButtonText| Default text on add item button. | "Add" |
 |deleteButton| Show delete button or not. | true |
+|inlineDeleteButton| Show inline delete button or not. | false |
 |deleteButtonText| Default text on delete button. | "Delete" |
 |saveOrderButton| Show save order button or not. | true |
 |saveOrderButtonText| Default text on save order button. | "Save Order" |
