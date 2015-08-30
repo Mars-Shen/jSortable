@@ -4,8 +4,6 @@ This is a plugin extend from [jQuery Ui](http://jqueryui.com/sortable/) Sortable
 
 In oredr to build a sortable and editable list
 
-code in branch V1BackUp
-
 ## What We Can Do
 * Add Item to list
 * Delete Item(s) from list
@@ -13,6 +11,7 @@ code in branch V1BackUp
 * Active/Inactive Item(s) in list
 * Reorder element in list using the mouse
 * Json Data Format
+* Online and offline mode
 
 ## Required
 - jQuery 1.7+
@@ -21,7 +20,6 @@ code in branch V1BackUp
 ## How To Use
 First, you need import our js and css file in your html file's head. Don't forget to import **jQuery** and **jQuery UI**
 ```html
-  <link rel="stylesheet" href="../jquery-ui/jquery-ui.css">
   <script src="../jquery-ui/jquery-1.11.3.js"></script>
   <script src="../jquery-ui/jquery-ui.js"></script>
   <script src="../src/jQueryUISortable.js"></script>
@@ -49,19 +47,24 @@ var options = {
 		defaultNewItemText:"New Item",
   		sortJsonData :  //list's data source array, json based. [{key:,isActiveFlag:,value}],
   		[{
-  				id : 1,                 //unique id
-  				isActiveFlag : false,   //active flag
-  				value : "item 1"        //value of this item
+  				index : 1,		//Must, order in data sequence
+  				isActiveFlag : false,   //Must, active flag
+  				value : "item 1",       //Must, value of this key value pair.
+  				key : 1,                 //Optional if keyValueMode is false, it's the key of key value pair.
+  				primaryKey : 1543       //Optional, mapping your own bussiness logic, like if you want to store a primaryKey of database, you can put it here.
   			}, {
-  				id : 2,
+  				key : 2,
+  				index : 2,
   				isActiveFlag : true,
   				value : "item 2"
   			}, {
-  				id : 3,
+  				key : 3,
+  				index : 3,
   				isActiveFlag : false,
   				value : "item 3"
   			}, {
-  				id : 4,
+  				key : 4,
+  				index : 4,
   				isActiveFlag : true,
   				value : "item 4"
   			}
@@ -72,17 +75,21 @@ This form show all `options`:
 
 | Name  | Description |Default|
 | :------------ |:------------|:------------|
-|groupMode| Group active and inactive items in two groups.| true |
+|onlineMode|Add or delete function will process on sever side.| false |
+|_saveURL_|Save function ajax url, if onlineMode is true, this url must be not null.| "" |
+|_deleteURL_|Delete function ajax url, if onlineMode is true, this url must be not null.| "" |
+|_activeURL_|Active function ajax url, if onlineMode is true, this url must be not null.| "" |
+|_blockfunction_|Block page function when ajax call is happening| "" |
+|_unblockfunction_|Unblock page function when ajax call has done| "" |
 |keyValueMode| Make this plugin in key value mode or not.| true |
 |enableNewItem| if this option is true, new item which you added will be enable as default. | false |
 |defaultNewItemKey| Default new item's key | "NK" |
 |defaultNewItemText| Default new item's value | "new value" |
 |sortJsonData| List's source data array, json based. [{id:,isActiveFlag:,value}].| [] |
 |activeButton| Show active/inactive button or not. | true |
+|inlineActiveButton| Show inline active/inactive button or not. | false |
 |activeButtonText| Default text on active button. | "Active/Inactive" |
-|batchButton| Show batch mode/normal button or not. | true |
-|batchButtonText| Default text on batch mode button. | "Batch Mode" |
-|normalModeButtonText| Default text on normal mode button. | "Normal Mode" |
+|batchMode| show checkbox or not. | true |
 |editButton| Show edit button or not. | true |
 |editButtonText| Default text on edit button. | "Edit" |
 |saveButtonText| Default text on save button. | "Save" |
@@ -90,12 +97,16 @@ This form show all `options`:
 |addButton| Show add item button or not. | true |
 |addButtonText| Default text on add item button. | "Add" |
 |deleteButton| Show delete button or not. | true |
+|inlineDeleteButton| Show inline delete button or not. | false |
 |deleteButtonText| Default text on delete button. | "Delete" |
-|submitButton| Show submit button or not. | true |
-|submitButtonText| Default text on submit button. | "Submit" |
+|saveOrderButton| Show save order button or not. | true |
+|saveOrderButtonText| Default text on save order button. | "Save Order" |
 |submitCallBack| Submit button callback. | function |
 |buttonClass| Custom button css class. | "" |
 |deleteCallBack|Delete button callback. use to confirm delete action. argument is select item(s).|function|
+
+#### Online mode
+coming soon..
 
 #### After these step, you can set a callback for your buttons.
 ```javascript
@@ -140,16 +151,21 @@ You can aslo reset the `options` source into this plugin,
 
 you can find a demo in this project *demo* folder.
 
+[Live Demo](http://www.marsshen.com/others/jSortable/demo/SortableDemo/)
+
 ## Screenshot
 Group Mode Demo
 ![Group Mode Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo_group_mode.gif)
-Single Mode Demo
-![Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo.gif)
+
 
 ##License
 Licensed under the MIT License
 
 ##Changelog
+#####v0.0.2
+26 Aug 2015
+* new UI, new online mode.
+
 #####v0.0.1
 origin version: 5 Aug 2015
 * this is a origin version for this plugin. 
