@@ -219,7 +219,7 @@
 			if (this.options.keyValueMode) {
 				codeDescHead = '<th class="sortable_Code_Style">Code</th><th class="sortable_Descrption_Style">Descrption</th>';
 			} else {
-				codeDescHead = '<th class="sortable_Descrption_Style">Descrption</th>';
+				codeDescHead = '<th class="sortable_Descrption_only_Style">Descrption</th>';
 			}
 			var otherHead = $('<th class="sortable_CheckBox_Style">No.</th>' + codeDescHead + '<th class="sortable_Operation_Style">Operation</th>');
 			theadTr.append(otherHead);
@@ -291,7 +291,7 @@
 							"</td>" +
 							"<td class=\"sortable_Descrption_Style\" title=\"" + valueStr + "\"><span class=\"sortable_read_only_text\">" + valueStr + "</span>" + "<input type=\"text\" class=\"hid_sortable_value sortable_text_value hide\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/></td>";
 					} else {
-						codeDescTD = "<td class=\"sortable_Descrption_Style\" title=\"" + valueStr + "\"><span class=\"sortable_read_only_text\">" + valueStr + "</span>" + "<input type=\"text\" class=\"hid_sortable_value sortable_text_value hide\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/></td>";
+						codeDescTD = "<td class=\"sortable_Descrption_only_Style\" title=\"" + valueStr + "\"><span class=\"sortable_read_only_text\">" + valueStr + "</span>" + "<input type=\"text\" class=\"hid_sortable_value sortable_text_value hide\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/></td>";
 					}
 					var editButtonHtml = "",
 						saveButtonHtml = "",
@@ -537,14 +537,18 @@
 			} else {
 				selectedItem = $(e);
 			}
+			var valueObj = selectedItem.find(".hid_sortable_value");
+			var keyObj = selectedItem.find(".hid_sortable_key");
+			keyObj.parents("td").removeClass("has-error");
+			valueObj.parents("td").removeClass("has-error");
 			var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
-			selectedItem.find(".hid_sortable_value").val(foundRecord.value);
+			valueObj.val(foundRecord.value);
 			selectedItem.find(".sortable_read_only_text").hide();
-			selectedItem.find(".hid_sortable_value").show().removeClass("hide");
+			valueObj.show().removeClass("hide");
 			if (this.options.keyValueMode) {
-				selectedItem.find(".hid_sortable_key").val(foundRecord.key);
+				keyObj.val(foundRecord.key);
 				selectedItem.find(".sortable_read_only_key").hide();
-				selectedItem.find(".hid_sortable_key").show().removeClass("hide");
+				keyObj.show().removeClass("hide");
 			}
 		},
 		/**
@@ -553,8 +557,29 @@
 		saveFunction: function(e, v) {
 			var selectedItem = $(e.target).parents("tr");
 			if (typeof selectedItem !== 'undefined' && selectedItem !== null) {
-				var valueStr = $.trim(selectedItem.find(".hid_sortable_value").val());
-				var keyStr = $.trim(selectedItem.find(".hid_sortable_key").val());
+				var valueObj = selectedItem.find(".hid_sortable_value");
+				var keyObj = selectedItem.find(".hid_sortable_key");
+				var valueStr = $.trim(valueObj.val());
+				var keyStr = $.trim(keyObj.val());
+				if (this.options.valueNotNull) {
+					keyObj.parents("td").removeClass("has-error");
+					valueObj.parents("td").removeClass("has-error");
+					if (this.options.keyValueMode) {
+						if (keyStr == "") {
+							keyObj.parents("td").addClass("has-error");
+							return false;
+						} else if (valueStr == "") {
+							valueObj.parents("td").addClass("has-error");
+							return false;
+						}
+					} else {
+						if (valueStr == "") {
+							valueObj.parents("td").addClass("has-error");
+							return false;
+						}
+					}
+				}
+
 				var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
 				if (this.options.onlineMode && this.options.saveURL != "") {
 					var tempKey = foundRecord.key;
@@ -575,13 +600,13 @@
 						},
 						success: function(data) {
 							if (data.status == 'success') {
-								selectedItem.find(".hid_sortable_value").val(foundRecord.value);
+								valueObj.val(foundRecord.value);
 								selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
-								selectedItem.find(".hid_sortable_value").hide().addClass("hide");
+								valueObj.hide().addClass("hide");
 								if (that.options.keyValueMode) {
-									selectedItem.find(".hid_sortable_key").val(foundRecord.key);
+									keyObj.val(foundRecord.key);
 									selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
-									selectedItem.find(".hid_sortable_key").hide().addClass("hide");
+									keyObj.hide().addClass("hide");
 								}
 								that.isEditMode = false;
 								that.changeEditModeButtonsStatus(e);
@@ -605,13 +630,13 @@
 					this.changeEditModeButtonsStatus(e);
 					foundRecord.value = valueStr;
 					foundRecord.key = keyStr;
-					selectedItem.find(".hid_sortable_value").val(foundRecord.value);
+					valueObj.val(foundRecord.value);
 					selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
-					selectedItem.find(".hid_sortable_value").hide().addClass("hide");
+					valueObj.hide().addClass("hide");
 					if (this.options.keyValueMode) {
-						selectedItem.find(".hid_sortable_key").val(foundRecord.key);
+						keyObj.val(foundRecord.key);
 						selectedItem.find(".sortable_read_only_key").show().removeClass("hide");
-						selectedItem.find(".hid_sortable_key").hide().addClass("hide");
+						keyObj.hide().addClass("hide");
 					}
 					this.refreshData();
 					if (foundRecord.newAddedFlag) {

@@ -21,6 +21,12 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.sortable_Descrption_only_Style{
+	width: 65%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .sortable_Operation_Style {
     width: 25%;
@@ -212,4 +218,9 @@ th {
     line-height: 1.42857;
     vertical-align: top;
     border-bottom: 1px solid #ddd;
+}
+
+.has-error input {
+    border: 0.1em solid #A94442 !important;
+    border-radius: 2px;
 }
