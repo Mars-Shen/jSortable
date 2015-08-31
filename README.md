@@ -4,6 +4,16 @@ This is a plugin extend from [jQuery Ui](http://jqueryui.com/sortable/) Sortable
 
 In oredr to build a sortable and editable list
 
+#### Demo
+
+you can find a demo in this project *demo* folder.
+
+[Live Demo](http://www.marsshen.com/others/jSortable/demo/SortableDemo/)
+
+#### Screenshot
+Group Mode Demo
+![Group Mode Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo.gif)
+
 ## What We Can Do
 * Add Item to list
 * Delete Item(s) from list
@@ -146,17 +156,6 @@ You can aslo reset the `options` source into this plugin,
 ```javascript
 	sortObj.sorttable("ModelData",options);
 ```
-
-#### Demo
-
-you can find a demo in this project *demo* folder.
-
-[Live Demo](http://www.marsshen.com/others/jSortable/demo/SortableDemo/)
-
-## Screenshot
-Group Mode Demo
-![Group Mode Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo_group_mode.gif)
-
 
 ##License
 Licensed under the MIT License
