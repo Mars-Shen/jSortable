@@ -408,7 +408,7 @@
 							type: 'POST',
 							dataType: 'json',
 							data: {
-								"activeActionRecord": rec
+								"activeInactiveRecord": rec
 							},
 							url: that.options.activeURL,
 							complete: function() {
@@ -612,6 +612,9 @@
 								that.changeEditModeButtonsStatus(e);
 								that.refreshData();
 								if (foundRecord.newAddedFlag) {
+									if (data.data.primaryKey) {
+										foundRecord["primaryKey"] = data.data.primaryKey;
+									}
 									that.newAddedItemsArr.push(foundRecord);
 									delete foundRecord["newAddedFlag"];
 								}
