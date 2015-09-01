@@ -1,9 +1,9 @@
 /**
- * jQueryUISortable v0.0.2
+ * jSortable v0.0.2
  * require jquery 1.7+
  * Mars Shen August 26, 2015,
  * MIT License
- * for more info pls visit: https://github.com/Mars-Shen/jQueryUISortable
+ * for more info pls visit: https://github.com/Mars-Shen/jSortable
  */
 ;
 (function(factory) {
@@ -19,7 +19,7 @@
 	}
 }(function($) {
 	// Create the defaults once
-	var pluginName = "sorttable",
+	var pluginName = "jSortable",
 		version = "v0.0.2",
 		defaults = {
 			//online mode necessary group
