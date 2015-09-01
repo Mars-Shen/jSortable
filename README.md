@@ -1,4 +1,4 @@
-# jQueryUISortable
+# jSortable
 ## Introductions
 This is a plugin extend from [jQuery Ui](http://jqueryui.com/sortable/) Sortable
 
@@ -11,7 +11,6 @@ you can find a demo in this project *demo* folder.
 [Live Demo](http://www.marsshen.com/others/jSortable/demo/SortableDemo/)
 
 #### Screenshot
-Group Mode Demo
 ![Group Mode Demo Image](https://github.com/Mars-Shen/jQueryUISortable/blob/master/demo/demo.gif)
 
 ## What We Can Do
@@ -32,8 +31,8 @@ First, you need import our js and css file in your html file's head. Don't forge
 ```html
   <script src="../jquery-ui/jquery-1.11.3.js"></script>
   <script src="../jquery-ui/jquery-ui.js"></script>
-  <script src="../src/jQueryUISortable.js"></script>
-  <link rel="stylesheet" href="../src/jQueryUISortable.css">
+  <script src="../src/jSortable.js"></script>
+  <link rel="stylesheet" href="../src/jSortable.css">
 ```
 The plugin can also be loaded as AMD module.
 
@@ -49,7 +48,7 @@ Html code snippet from demo:
 
 #### In your own js file, first of all, you need to initialize our plugin.
 ```JavaScript
-$("#sortable").sorttable(options);
+$("#sortable").jSortable(options);
 ```
 Here, `options` is a json string, it looks like this:
 ```JSON5
@@ -92,6 +91,7 @@ This form show all `options`:
 |_blockfunction_|Block page function when ajax call is happening| "" |
 |_unblockfunction_|Unblock page function when ajax call has done| "" |
 |keyValueMode| Make this plugin in key value mode or not.| true |
+|valueNotNull| Value like key or value can not be null.| true |
 |enableNewItem| if this option is true, new item which you added will be enable as default. | false |
 |defaultNewItemKey| Default new item's key | "NK" |
 |defaultNewItemText| Default new item's value | "new value" |
@@ -120,9 +120,9 @@ coming soon..
 
 #### After these step, you can set a callback for your buttons.
 ```javascript
-sortObj.sorttable("SubmitCallback", function () {
+sortObj.jSortable("SubmitCallback", function () {
 	var str = "";
-	var obj = sortObj.sorttable("ModelData");
+	var obj = sortObj.jSortable("ModelData");
 	$.each(obj.sortJsonData, function (i, v) {
 		str += "Record " + v.id + "'s status is " + v.isActiveFlag + "(key: "+ v.key +", value: " + v.value + ").\n ";
 	});
@@ -139,7 +139,7 @@ There are some medthods you can inovke right now.
 |DeleteCallBack|Set delete button callback|function|
 You can get json based data from `ModelData` medthod
 ```javascript
-	var data = sortObj.sorttable("ModelData");
+	var data = sortObj.jSortable("ModelData");
 ```
 
 Json based data structure from `ModelData` medthod:
@@ -154,7 +154,7 @@ Json based data structure from `ModelData` medthod:
 ```
 You can aslo reset the `options` source into this plugin,
 ```javascript
-	sortObj.sorttable("ModelData",options);
+	sortObj.jSortable("ModelData",options);
 ```
 
 ##License
