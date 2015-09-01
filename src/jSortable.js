@@ -53,12 +53,14 @@
 			inlineDeleteButton: false, //show inline delete button or not, default is true.
 			deleteButtonText: "Delete", //text on delete button.
 			saveOrderButton: true, //show submit button or not, default is true.
-			saveOrderButtonText: "Save Order", //text on submit button.
+			saveOrderButtonText: "Save", //text on submit button.
 			submitCallBack: function() {}, //submit button callback.
 			deleteCallBack: function(selectItems) {
 				return confirm("Do you want to delete this record(s)");
 			}, //delete button callback. use to confirm delete action. argument is select item(s).
-			buttonClass: "" // custom button class.
+			buttonClass: "", // custom button class.
+			descrptionText: "Descrption",
+			codeText: "Code"
 		};
 
 	var SortTable = function(element, options) {
@@ -217,9 +219,9 @@
 			}
 			var codeDescHead = "";
 			if (this.options.keyValueMode) {
-				codeDescHead = '<th class="sortable_Code_Style">Code</th><th class="sortable_Descrption_Style">Descrption</th>';
+				codeDescHead = '<th class="sortable_Code_Style">' + this.options.codeText + '</th><th class="sortable_Descrption_Style">' + this.options.descrptionText + '</th>';
 			} else {
-				codeDescHead = '<th class="sortable_Descrption_only_Style">Descrption</th>';
+				codeDescHead = '<th class="sortable_Descrption_only_Style">' + this.options.descrptionText + '</th>';
 			}
 			var otherHead = $('<th class="sortable_CheckBox_Style">No.</th>' + codeDescHead + '<th class="sortable_Operation_Style">Operation</th>');
 			theadTr.append(otherHead);
