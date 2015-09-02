@@ -62,7 +62,7 @@
 			buttonClass: "", // custom button class.
 			descrptionText: "Descrption",
 			codeText: "Code",
-			operatinText: "Operation",
+			operationText: "Operation",
 			noText: "No.",
 		};
 
