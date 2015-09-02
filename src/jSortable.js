@@ -27,6 +27,7 @@
 			saveURL: "", //save function ajax url, if onlineMode is true, this url must be not null.
 			deleteURL: "", //delete function ajax url, if onlineMode is true, this url must be not null.
 			activeURL: "", //active function ajax url, if onlineMode is true, this url must be not null.
+			saveOrderURL: "", //Save order function ajax url, if onlineMode is true, this url must be not null.
 
 			blockfunction: function() {}, //block page when ajax call
 			unblockfunction: function() {}, //block page when ajax call
@@ -60,7 +61,9 @@
 			}, //delete button callback. use to confirm delete action. argument is select item(s).
 			buttonClass: "", // custom button class.
 			descrptionText: "Descrption",
-			codeText: "Code"
+			codeText: "Code",
+			operatinText: "Operation",
+			noText: "No.",
 		};
 
 	var SortTable = function(element, options) {
@@ -101,11 +104,7 @@
 			//save order button clicked
 			$(this.element).off("click", "#" + this.elementId + "_saveOrder").on("click", "#" + this.elementId + "_saveOrder", function(event) {
 				if (!$(this).hasClass("btn-inactive")) {
-					if (typeof that.options.submitCallBack == "function") {
-						that.options.submitCallBack(event);
-					} else {
-						$.error("SubmitCallBack " + that.options.submitCallBack + " is not a function!");
-					}
+					that.saveOrderFunction(event);
 				}
 			});
 			//active or inactive selected item
@@ -223,7 +222,7 @@
 			} else {
 				codeDescHead = '<th class="sortable_Descrption_only_Style">' + this.options.descrptionText + '</th>';
 			}
-			var otherHead = $('<th class="sortable_CheckBox_Style">No.</th>' + codeDescHead + '<th class="sortable_Operation_Style">Operation</th>');
+			var otherHead = $('<th class="sortable_CheckBox_Style">' + this.options.noText + '</th>' + codeDescHead + '<th class="sortable_Operation_Style">' + this.options.operationText + '</th>');
 			theadTr.append(otherHead);
 			var tbody = $('<tbody id="table_body_' + this.elementId + '"  class="sortable_Tbody_Style"></tbody>');
 			table.append(tbody);
@@ -244,6 +243,7 @@
 					that.recordNewOrder();
 					that.refreshData();
 					ui.item.removeAttr("style");
+					that.recordChanged();
 				}
 			};
 			this.sortableObj = $(this.tableBodyElement).sortable(argOptions);
@@ -551,6 +551,48 @@
 				keyObj.val(foundRecord.key);
 				selectedItem.find(".sortable_read_only_key").hide();
 				keyObj.show().removeClass("hide");
+			}
+		},
+		/**
+		 *Save Order function
+		 */
+		saveOrderFunction: function(e, v) {
+			var that = this;
+			if (this.options.onlineMode && this.options.saveOrderURL != "") {
+				var saveOrderJson = [];
+				$.each(that.options.sortJsonData, function(i, v) {
+					saveOrderJson[i] = JSON.stringify(v);
+				});
+				that.options.blockfunction();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						"saveOrder": saveOrderJson
+					},
+					url: that.options.saveOrderURL,
+					complete: function() {
+						that.options.unblockfunction();
+					},
+					success: function(data) {
+						if (data.status == 'success') {
+							alert("Save success!");
+							that.recordOrderClear();
+							that.options.submitCallBack(e);
+						} else {
+							if (data.message) {
+								alert(data.message);
+							}
+						}
+					}
+				});
+			} else {
+				if (typeof that.options.submitCallBack == "function") {
+					that.recordOrderClear();
+					that.options.submitCallBack(e);
+				} else {
+					$.error("SubmitCallBack " + that.options.submitCallBack + " is not a function!");
+				}
 			}
 		},
 		/**
@@ -918,7 +960,7 @@
 					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_deleteItem " + buttonClass + "\" value=\"" + this.options.deleteButtonText + "\"/>";
 					break;
 				case "sub":
-					sHtml = "<li><input type=\"button\" class=\"btn-primary " + buttonClass + "\" id=\"" + this.elementId + "_saveOrder\" value=\"" + this.options.saveOrderButtonText + "\"/></li>";
+					sHtml = "<li><input type=\"button\" class=\"btn-inactive " + buttonClass + "\" id=\"" + this.elementId + "_saveOrder\" value=\"" + this.options.saveOrderButtonText + "\"/></li>";
 					break;
 				case "edi":
 					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_editItem " + buttonClass + "\" value=\"" + this.options.editButtonText + "\"/>";
@@ -975,6 +1017,12 @@
 			$("#" + this.elementId + "_deleteItems").addClass("btn-inactive").removeClass("btn-primary");
 			$("#" + this.elementId + "_acitveInactiveItems").addClass("btn-inactive").removeClass("btn-primary");
 		}, //Delegate, this is invoked when user enter batch job mode and select nothing
+		recordChanged: function() {
+			$("#" + this.elementId + "_saveOrder").removeClass("btn-inactive").addClass("btn-primary");
+		},
+		recordOrderClear: function() {
+			$("#" + this.elementId + "_saveOrder").addClass("btn-inactive").removeClass("btn-primary");
+		},
 		sortBy: function(filed, rev, primer) {
 			rev = (rev) ? -1 : 1;
 			return function(a, b) {
