@@ -602,25 +602,32 @@
 			var selectedItem = $(e.target).parents("tr");
 			if (typeof selectedItem !== 'undefined' && selectedItem !== null) {
 				var valueObj = selectedItem.find(".hid_sortable_value");
-				var keyObj = selectedItem.find(".hid_sortable_key");
+				var keyObj = null;
 				var valueStr = $.trim(valueObj.val());
-				var keyStr = $.trim(keyObj.val());
+				var keyStr = null;
+				var notNull = true;
 				if (this.options.valueNotNull) {
-					keyObj.parents("td").removeClass("has-error");
 					valueObj.parents("td").removeClass("has-error");
 					if (this.options.keyValueMode) {
+						keyObj = selectedItem.find(".hid_sortable_key");
+						keyObj.parents("td").removeClass("has-error");
+						keyStr = $.trim(keyObj.val());
 						if (keyStr == "") {
 							keyObj.parents("td").addClass("has-error");
-							return false;
-						} else if (valueStr == "") {
+							notNull = false;
+						}
+						if (valueStr == "") {
 							valueObj.parents("td").addClass("has-error");
-							return false;
+							notNull = false;
 						}
 					} else {
 						if (valueStr == "") {
 							valueObj.parents("td").addClass("has-error");
-							return false;
+							notNull = false;
 						}
+					}
+					if (!notNull) {
+						return false;
 					}
 				}
 
@@ -629,7 +636,9 @@
 					var tempKey = foundRecord.key;
 					var tempValue = foundRecord.value;
 					foundRecord.value = valueStr;
-					foundRecord.key = keyStr;
+					if (this.options.keyValueMode) {
+						foundRecord.key = keyStr;
+					}
 					var that = this;
 					this.options.blockfunction();
 					$.ajax({
@@ -676,7 +685,9 @@
 					this.isEditMode = false;
 					this.changeEditModeButtonsStatus(e);
 					foundRecord.value = valueStr;
-					foundRecord.key = keyStr;
+					if (this.options.keyValueMode) {
+						foundRecord.key = keyStr;
+					}
 					valueObj.val(foundRecord.value);
 					selectedItem.find(".sortable_read_only_text").show().removeClass("hide");
 					valueObj.hide().addClass("hide");
