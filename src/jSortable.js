@@ -34,7 +34,7 @@
 
 			valueNotNull: true, //Value like key or value can not be null.
 			keyValueMode: true, //Make this plugin in key value mode or not.
-			enableNewItem: false, //if this option is true, new item which you added will be enable. default is false.
+			enableNewItem: true, //if this option is true, new item which you added will be enable. default is false.
 			defaultNewItemKey: "NK", //default new item's key
 			defaultNewItemText: "new value", //default new item's value
 			sortJsonData: [], //table's data array, json based. [{index:,key:,isActiveFlag:,value:}].
@@ -749,6 +749,35 @@
 				this.options.sortJsonData.splice(foundRecordIndex, 1);
 			}
 		},
+		saveOrderAfterDelete: function() {
+			var that = this;
+			if (this.options.onlineMode && this.options.saveOrderURL != "") {
+				var saveOrderJson = [];
+				$.each(that.options.sortJsonData, function(i, v) {
+					saveOrderJson[i] = JSON.stringify(v);
+				});
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						"saveOrder": saveOrderJson
+					},
+					url: that.options.saveOrderURL,
+					complete: function() {
+						that.options.unblockfunction();
+					},
+					success: function(data) {
+						if (data.status == 'success') {
+							alert("Delete sucessful!");
+						} else {
+							if (data.message) {
+								alert(data.message);
+							}
+						}
+					}
+				});
+			}
+		},
 		/**
 		 *delete function
 		 */
@@ -771,9 +800,6 @@
 										"deleteRecord": rec
 									},
 									url: that.options.deleteURL,
-									complete: function() {
-										that.options.unblockfunction();
-									},
 									success: function(data) {
 										if (data.status == 'success') {
 											that.deleteDataFromModel(foundRecord.id);
@@ -792,7 +818,7 @@
 											that.recordNewOrder();
 											that.refreshData();
 											selectedItem = null;
-											alert("Delete sucessful!");
+											that.saveOrderAfterDelete();
 										} else {
 											if (data.message) {
 												alert(data.message);
@@ -853,9 +879,6 @@
 									"deleteRecord": deleteItemsJsons
 								},
 								url: that.options.deleteURL,
-								complete: function() {
-									that.options.unblockfunction();
-								},
 								success: function(data) {
 									if (data.status == 'success') {
 										$.each(deleteItems, function(ind, value) {
@@ -875,7 +898,7 @@
 										});
 										that.recordNewOrder();
 										that.refreshData();
-										alert("Delete sucessful!");
+										that.saveOrderAfterDelete();
 									} else {
 										if (data.message) {
 											alert(data.message);
