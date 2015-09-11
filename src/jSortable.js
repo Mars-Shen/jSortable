@@ -207,6 +207,10 @@
 			if (this.options.saveOrderButton) {
 				buttonElements.append($(this.getButtonHtml("sub")));
 			}
+			var alertMessageDiv = $('<div id="jSortable_ErrorMsg_' + this.elementId + '" class="omdwebErrorMsg" style="display:none;"><button type="button" class="errorCloseBtn close" data-dismiss="alert" value="Close"><span>X</span></button><p id="jSortable_AlertTitle_' + this.elementId + '"></p><ul id="jSortable_AlertBody_' + this.elementId + '"></ul></div>');
+			var successMessageDiv = $('<div id="jSortable_SuccessMsg_' + this.elementId + '" class="omdwebSuccessMsg" style="display:none;"><button type="button" class="errorCloseBtn close" data-dismiss="alert" value="Close"><span>X</span></button><p id="jSortable_SuccessTitle_' + this.elementId + '"></p><ul id="jSortable_SuccessBody_' + this.elementId + '"></ul></div>');
+
+
 			var table = $('<table class="table responsivetable sortable_div_container" id="table_' + this.elementId + '"></table>');
 			var thead = $('<thead id="table_head_' + this.elementId + '" class="sortable_Thead_Style"></thead>');
 			var theadTr = $('<tr class="sortable_Thead_Tr_Style"></tr>');
@@ -227,6 +231,8 @@
 			var tbody = $('<tbody id="table_body_' + this.elementId + '"  class="sortable_Tbody_Style"></tbody>');
 			table.append(tbody);
 			this.tableBodyElement = tbody;
+			element.append(alertMessageDiv);
+			element.append(successMessageDiv);
 			element.append(table);
 			this.prepareModelData();
 		},
@@ -426,7 +432,7 @@
 									}
 								} else {
 									if (data.message) {
-										alert(data.message);
+										that.showAlertMessage(data.message);
 									}
 								}
 								that.refreshData();
@@ -485,7 +491,7 @@
 								that.refreshData();
 							} else {
 								if (data.message) {
-									alert(data.message);
+									that.showAlertMessage(data.message);
 								}
 							}
 						}
@@ -576,12 +582,12 @@
 					},
 					success: function(data) {
 						if (data.status == 'success') {
-							alert("Save success!");
+							that.showSuccessMessage("Save success!");
 							that.recordOrderClear();
 							that.options.submitCallBack(e);
 						} else {
 							if (data.message) {
-								alert(data.message);
+								that.showAlertMessage(data.message);
 							}
 						}
 					}
@@ -671,12 +677,12 @@
 									that.newAddedItemsArr.push(foundRecord);
 									delete foundRecord["newAddedFlag"];
 								}
-								alert("Update sucessful!");
+								that.showSuccessMessage("Update sucessful!");
 							} else {
 								foundRecord.value = tempValue;
 								foundRecord.key = tempKey;
 								if (data.message) {
-									alert(data.message);
+									that.showAlertMessage(data.message);
 								}
 							}
 						}
@@ -768,10 +774,10 @@
 					},
 					success: function(data) {
 						if (data.status == 'success') {
-							alert("Delete sucessful!");
+							that.showSuccessMessage("Delete sucessful!");
 						} else {
 							if (data.message) {
-								alert(data.message);
+								that.showAlertMessage(data.message);
 							}
 						}
 					}
@@ -821,7 +827,7 @@
 											that.saveOrderAfterDelete();
 										} else {
 											if (data.message) {
-												alert(data.message);
+												that.showAlertMessage(data.message);
 											}
 										}
 									}
@@ -901,7 +907,7 @@
 										that.saveOrderAfterDelete();
 									} else {
 										if (data.message) {
-											alert(data.message);
+											that.showAlertMessage(data.message);
 										}
 									}
 								}
@@ -1053,6 +1059,24 @@
 		}, //Delegate, this is invoked when user enter batch job mode and select nothing
 		recordChanged: function() {
 			$("#" + this.elementId + "_saveOrder").removeClass("btn-inactive").addClass("btn-primary");
+		},
+		showAlertMessage: function(msg) {
+			$("#jSortable_AlertBody_" + this.elementId).empty();
+			$("#jSortable_AlertBody_" + this.elementId).html(msg);
+			$("#jSortable_ErrorMsg_" + this.elementId).show();
+		},
+		hideAlertMessage: function() {
+			$("#jSortable_AlertBody_" + this.elementId).empty();
+			$("#jSortable_ErrorMsg_" + this.elementId).hide();
+		},
+		showSuccessMessage: function(msg) {
+			$("#jSortable_SuccessBody_" + this.elementId).empty();
+			$("#jSortable_SuccessBody_" + this.elementId).html(msg);
+			$("#jSortable_SuccessMsg_" + this.elementId).show();
+		},
+		hideSuccessMessage: function() {
+			$("#jSortable_SuccessBody_" + this.elementId).empty();
+			$("#jSortable_SuccessMsg_" + this.elementId).hide();
 		},
 		recordOrderClear: function() {
 			$("#" + this.elementId + "_saveOrder").addClass("btn-inactive").removeClass("btn-primary");

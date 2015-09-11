@@ -221,3 +221,33 @@ th {
     border: 0.1em solid #A94442 !important;
     border-radius: 2px;
 }
+
+.close {
+    float: right;
+    font-weight: bold;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: 0.2;
+    filter: alpha(opacity = 20);
+}
+button.close {
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+}
+.omdwebErrorMsg {
+    margin: 1em 0;
+    padding: 1em 1em 1em 32px;
+    color: #c03;
+    border: 1px solid #d5d9d8;
+}
+
+.omdwebSuccessMsg {
+    color: #8b0;
+    margin: 1em 0;
+    padding: 1em 1em 1em 32px;
+    border: 1px solid #d5d9d8;
+}
