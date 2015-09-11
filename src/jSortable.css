@@ -45,10 +45,7 @@
 
 .sortable_Tbody_Tr_Style {
     display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
     display: -webkit-flex;
-    display: flex;
 }
 
 .sortable_Thead_Tr_Style {
