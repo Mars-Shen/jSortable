@@ -56,8 +56,10 @@
 			saveOrderButton: true, //show submit button or not, default is true.
 			saveOrderButtonText: "Save", //text on submit button.
 			submitCallBack: function() {}, //submit button callback.
-			deleteCallBack: function(selectItems) {
-				return confirm("Do you want to delete this record(s)");
+			deleteCallBack: function(successCallBack) {
+				if (confirm("Do you want to delete this record(s)")) {
+					successCallBack();
+				}
 			}, //delete button callback. use to confirm delete action. argument is select item(s).
 			buttonClass: "", // custom button class.
 			descrptionText: "Descrption",
@@ -792,13 +794,13 @@
 		deleteFunction: function(e, isBatch) {
 			var that = this;
 			if (typeof this.options.deleteCallBack == "function") {
-				if (this.options.deleteCallBack(this.selectedItem)) {
+				this.options.deleteCallBack(function() {
 					if (!isBatch) {
 						var selectedItem = $(e.target).parents("tr");
 						if (typeof selectedItem !== 'undefined' && selectedItem !== null) {
-							var foundRecord = this.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
-							if (this.options.onlineMode && this.options.deleteURL != "") {
-								this.options.blockfunction();
+							var foundRecord = that.findDataFromModel($.trim(selectedItem.find(".hid_sortable_id").val()));
+							if (that.options.onlineMode && that.options.deleteURL != "") {
+								that.options.blockfunction();
 								var rec = [];
 								rec[0] = JSON.stringify(foundRecord);
 								$.ajax({
@@ -835,7 +837,7 @@
 									}
 								});
 							} else {
-								this.deleteDataFromModel(foundRecord.id);
+								that.deleteDataFromModel(foundRecord.id);
 								selectedItem.remove();
 								var isNewAddedItem = false;
 								$.each(that.newAddedItemsArr, function(i, v) {
@@ -846,15 +848,15 @@
 									}
 								});
 								if (!isNewAddedItem) {
-									this.deletedItemsArr.push(foundRecord);
+									that.deletedItemsArr.push(foundRecord);
 								}
 								that.recordNewOrder();
-								this.refreshData();
-								this.selectedItem = null;
+								that.refreshData();
+								that.selectedItem = null;
 							}
 						}
 					} else {
-						var allItems = this.getSelectItems();
+						var allItems = that.getSelectItems();
 						var checkedItems = allItems.checkedItems;
 						var deleteItems = [];
 						var deleteItemsJsons = [];
@@ -878,8 +880,8 @@
 								}
 							}
 						});
-						if (this.options.onlineMode && this.options.deleteURL != "") {
-							this.options.blockfunction();
+						if (that.options.onlineMode && that.options.deleteURL != "") {
+							that.options.blockfunction();
 							$.ajax({
 								type: 'POST',
 								dataType: 'json',
@@ -918,10 +920,10 @@
 							that.recordNewOrder();
 							that.refreshData();
 						}
-						this.selectNumber = 0;
-						this.batchModeButtonStatus();
+						that.selectNumber = 0;
+						that.batchModeButtonStatus();
 					}
-				}
+				});
 			} else {
 				$.error("DeleteCallBack " + this.options.deleteCallBack + " is not a function!");
 			}
@@ -1002,7 +1004,12 @@
 					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_deleteItem " + buttonClass + "\" value=\"" + this.options.deleteButtonText + "\"/>";
 					break;
 				case "sub":
-					sHtml = "<li><input type=\"button\" class=\"btn-inactive " + buttonClass + "\" id=\"" + this.elementId + "_saveOrder\" value=\"" + this.options.saveOrderButtonText + "\"/></li>";
+					if (this.options.onlineMode) {
+						sHtml = "<li><input type=\"button\" class=\"btn-inactive " + buttonClass + "\" id=\"" + this.elementId + "_saveOrder\" value=\"" + this.options.saveOrderButtonText + "\"/></li>";
+					} else {
+						sHtml = "<li><input type=\"button\" class=\"btn-primary " + buttonClass + "\" id=\"" + this.elementId + "_saveOrder\" value=\"" + this.options.saveOrderButtonText + "\"/></li>";
+
+					}
 					break;
 				case "edi":
 					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_editItem " + buttonClass + "\" value=\"" + this.options.editButtonText + "\"/>";
