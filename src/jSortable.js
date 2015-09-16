@@ -64,6 +64,8 @@
 			codeText: "Code",
 			operationText: "Operation",
 			noText: "No.",
+			maxCodeLength: 50,
+			maxDescriptionLength: 50
 		};
 
 	var SortTable = function(element, options) {
@@ -295,11 +297,11 @@
 					var codeDescTD = "";
 					if (that.options.keyValueMode) {
 						codeDescTD = "<td class=\"sortable_Code_Style\" title=\"" + keyStr + "\"><span class=\"sortable_read_only_key\">" + keyStr + "</span>" +
-							"<input type=\"text\" class=\"hid_sortable_key sortable_text_key hide\" id=\"hid_sortable_key_" + idStr + "\" value=\"" + keyStr + "\" />" +
+							"<input type=\"text\" class=\"hid_sortable_key sortable_text_key hide\" maxlength=\"" + that.options.maxCodeLength + "\" id=\"hid_sortable_key_" + idStr + "\" value=\"" + keyStr + "\" />" +
 							"</td>" +
-							"<td class=\"sortable_Descrption_Style\" title=\"" + valueStr + "\"><span class=\"sortable_read_only_text\">" + valueStr + "</span>" + "<input type=\"text\" class=\"hid_sortable_value sortable_text_value hide\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/></td>";
+							"<td class=\"sortable_Descrption_Style\" title=\"" + valueStr + "\"><span class=\"sortable_read_only_text\">" + valueStr + "</span>" + "<input type=\"text\" class=\"hid_sortable_value sortable_text_value hide\" maxlength=\"" + that.options.maxDescriptionLength + "\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/></td>";
 					} else {
-						codeDescTD = "<td class=\"sortable_Descrption_only_Style\" title=\"" + valueStr + "\"><span class=\"sortable_read_only_text\">" + valueStr + "</span>" + "<input type=\"text\" class=\"hid_sortable_value sortable_text_value hide\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/></td>";
+						codeDescTD = "<td class=\"sortable_Descrption_only_Style\" title=\"" + valueStr + "\"><span class=\"sortable_read_only_text\">" + valueStr + "</span>" + "<input type=\"text\" class=\"hid_sortable_value sortable_text_value hide\" maxlength=\"" + that.options.maxDescriptionLength + "\" id=\"hid_sortable_value_" + idStr + "\" value=\"" + valueStr + "\"/></td>";
 					}
 					var editButtonHtml = "",
 						saveButtonHtml = "",
