@@ -1,7 +1,7 @@
 /**
- * jSortable v0.0.2
+ * jSortable v0.0.3
  * require jquery 1.7+
- * Mars Shen August 26, 2015,
+ * Mars Shen September 28, 2015,
  * MIT License
  * for more info pls visit: https://github.com/Mars-Shen/jSortable
  */
@@ -20,10 +20,11 @@
 }(function($) {
 	// Create the defaults once
 	var pluginName = "jSortable",
-		version = "v0.0.2",
+		version = "v0.0.3",
 		defaults = {
 			//online mode necessary group
 			onlineMode: false, //Add or delete function will process on sever side.
+			autoSave: true, //Auto save in online mode.
 			saveURL: "", //save function ajax url, if onlineMode is true, this url must be not null.
 			deleteURL: "", //delete function ajax url, if onlineMode is true, this url must be not null.
 			activeURL: "", //active function ajax url, if onlineMode is true, this url must be not null.
@@ -35,8 +36,8 @@
 			valueNotNull: true, //Value like key or value can not be null.
 			keyValueMode: true, //Make this plugin in key value mode or not.
 			enableNewItem: true, //if this option is true, new item which you added will be enable. default is false.
-			defaultNewItemKey: "NK", //default new item's key
-			defaultNewItemText: "new value", //default new item's value
+			defaultNewItemKey: "", //default new item's key
+			defaultNewItemText: "", //default new item's value
 			sortJsonData: [], //table's data array, json based. [{index:,key:,isActiveFlag:,value:}].
 			activeButton: true, //show active/inactive button or not, default is true.
 			inlineActiveButton: false, //show inline active/inactive button or not, default is true.
@@ -254,6 +255,9 @@
 					that.refreshData();
 					ui.item.removeAttr("style");
 					that.recordChanged();
+					if (that.options.onlineMode && that.options.saveOrderURL != "" && that.options.autoSave) {
+						that.saveOrderFunction();
+					}
 				}
 			};
 			this.sortableObj = $(this.tableBodyElement).sortable(argOptions);
