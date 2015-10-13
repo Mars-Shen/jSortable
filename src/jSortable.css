@@ -136,6 +136,7 @@ ul {
     display: inline-block;
     position: relative;
     margin-bottom: 0;
+    float: left;
 }
 
 .action-menu li {
@@ -250,4 +251,60 @@ button.close {
     margin: 1em 0;
     padding: 1em 1em 1em 32px;
     border: 1px solid #d5d9d8;
+}
+
+ .r-tabs-tab {
+    width: 13.65%;
+    vertical-align: bottom;
+    position: relative;
+    top: 0px;
+    float: left;
+    margin-right: 3px;
+}
+
+.r-tabs-nav .r-tabs-state-active {
+    background-color: #fff;
+    margin-bottom: -1px;
+    border-top: 1px solid #d5d9d8;
+    border-right: 1px solid #d5d9d8;
+    border-left: 1px solid #d5d9d8;
+}
+.r-tabs-nav {
+    margin: 0;
+    padding: 0;
+}
+.r-tabs-nav .r-tabs-tab {
+    position: relative;
+    top: 1px;
+    float: right;
+}
+
+.r-tabs-tab {
+    display: inline-block;
+    margin: 0;
+    list-style: none;
+}
+
+.r-tabs-anchor {
+    position: relative;
+    display: block;
+    padding: 9px 6%;
+    line-height: 14px;
+    margin-bottom: 0;
+    background-color: transparent;
+}
+
+
+.r-tabs-nav .r-tabs-anchor {
+    margin-bottom: 3px;
+    padding: 10px 12px;
+    text-decoration: none;
+    font-weight: 700 !important;
+    color: #737373;
+    text-decoration: none;
+    outline: none;
+}
+
+.r-tabs-state-default {
+    background-color: #e5e9ea;
 }

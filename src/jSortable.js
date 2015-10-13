@@ -33,6 +33,10 @@
 			blockfunction: function() {}, //block page when ajax call
 			unblockfunction: function() {}, //block page when ajax call
 
+			groupMode: true, //group active and inactive items
+			groupAcitveText: "Active Items",
+			groupInacitveText: "Inactive Items",
+
 			valueNotNull: true, //Value like key or value can not be null.
 			keyValueMode: true, //Make this plugin in key value mode or not.
 			enableNewItem: true, //if this option is true, new item which you added will be enable. default is false.
@@ -76,6 +80,7 @@
 		this.elementId = $(element).attr("id");
 		this.buttonElements = null; //button groups
 		this.tableBodyElement = null; //table element
+		this.tableBodyInactiveElement = null; //inactive table element
 		this.sortableObj = null;
 		this.startIndex = 0;
 		this.options = $.extend({}, defaults, options); //this.options.sortJsonData is using to store source data
@@ -154,6 +159,19 @@
 					that.addItemFunction();
 				}
 			});
+
+			$(this.element).off("click", "#" + this.elementId + "_tab-active-li").on("click", "#" + this.elementId + "_tab-active-li", function() {
+				if (!$(this).parent().hasClass("r-tabs-state-active")) {
+					that.groupButtonClick(true);
+				}
+			});
+
+			$(this.element).off("click", "#" + this.elementId + "_tab-inactive-li").on("click", "#" + this.elementId + "_tab-inactive-li", function() {
+				if (!$(this).parent().hasClass("r-tabs-state-active")) {
+					that.groupButtonClick(false);
+				}
+			});
+
 			//bind checkbox click event
 			$(this.element).off("click", "input[type='checkbox']").on("click", "input[type='checkbox']", function() {
 				var checkboxes = $(that.element).find("tr .td_sortable_checkbox");
@@ -184,6 +202,37 @@
 						}
 					}
 				}
+
+				if (that.options.groupMode) {
+					var checkboxes_inactive = $(that.element).find("tr .td_sortable_checkbox_inactive");
+					var checkAllButton_inactive = $(that.element).find(".checkAll_inactive");
+					if ($(this).hasClass("checkAll_inactive")) {
+						$.each(checkboxes_inactive, function() {
+							if (checkAllButton_inactive.prop("checked")) {
+								$(this).prop("checked", true);
+							} else {
+								$(this).prop("checked", false);
+							}
+						});
+						if ($(this).prop("checked")) {
+							that.selectNumber = checkboxes_inactive.length;
+						} else {
+							that.selectNumber = 0;
+						}
+					} else {
+						if ($(this).prop("checked")) {
+							that.selectNumber++;
+							if (checkboxes_inactive.length == that.selectNumber) {
+								checkAllButton_inactive.prop("checked", true);
+							}
+						} else {
+							that.selectNumber--;
+							if (checkAllButton_inactive.prop("checked")) {
+								checkAllButton_inactive.prop("checked", false);
+							}
+						}
+					}
+				}
 				that.batchModeButtonStatus();
 			});
 		},
@@ -193,6 +242,10 @@
 		buildSortHTML: function() {
 			var element = $(this.element);
 			element.empty();
+			var alertMessageDiv = $('<div id="jSortable_ErrorMsg_' + this.elementId + '" class="omdwebErrorMsg" style="display:none;"><button type="button" class="errorCloseBtn close" data-dismiss="alert" value="Close"><span>X</span></button><p id="jSortable_AlertTitle_' + this.elementId + '"></p><ul id="jSortable_AlertBody_' + this.elementId + '"></ul></div>');
+			var successMessageDiv = $('<div id="jSortable_SuccessMsg_' + this.elementId + '" class="omdwebSuccessMsg" style="display:none;"><button type="button" class="errorCloseBtn close" data-dismiss="alert" value="Close"><span>X</span></button><p id="jSortable_SuccessTitle_' + this.elementId + '"></p><ul id="jSortable_SuccessBody_' + this.elementId + '"></ul></div>');
+			element.append(alertMessageDiv);
+			element.append(successMessageDiv);
 			//add button ul elements
 			var buttonElements = $("<ul id=\"ul_" + this.elementId + "\"></ul>");
 			buttonElements.addClass("action-menu");
@@ -212,10 +265,19 @@
 			if (this.options.saveOrderButton) {
 				buttonElements.append($(this.getButtonHtml("sub")));
 			}
-			var alertMessageDiv = $('<div id="jSortable_ErrorMsg_' + this.elementId + '" class="omdwebErrorMsg" style="display:none;"><button type="button" class="errorCloseBtn close" data-dismiss="alert" value="Close"><span>X</span></button><p id="jSortable_AlertTitle_' + this.elementId + '"></p><ul id="jSortable_AlertBody_' + this.elementId + '"></ul></div>');
-			var successMessageDiv = $('<div id="jSortable_SuccessMsg_' + this.elementId + '" class="omdwebSuccessMsg" style="display:none;"><button type="button" class="errorCloseBtn close" data-dismiss="alert" value="Close"><span>X</span></button><p id="jSortable_SuccessTitle_' + this.elementId + '"></p><ul id="jSortable_SuccessBody_' + this.elementId + '"></ul></div>');
-
-
+			if (this.options.groupMode) {
+				var groupButton = $("<ul id=\"ul_group_" + this.elementId + "\"></ul>");
+				groupButton.addClass("r-tabs-nav");
+				var groupActiveLiElement = $("<li class=\"r-tabs-tab r-tabs-state-active\"></li>");
+				var groupAElement = $("<a class=\"r-tabs-anchor\" id=\"" + this.elementId + "_tab-active-li\" href=\"javascript:void(0)\" onclick=\"\">" + this.options.groupAcitveText + "</a>");
+				groupActiveLiElement.append(groupAElement);
+				groupButton.append(groupActiveLiElement);
+				var groupInactiveLiElement = $("<li class=\"r-tabs-state-default r-tabs-tab\"></li>");
+				var groupInactiveAElement = $("<a class=\"r-tabs-anchor\" id=\"" + this.elementId + "_tab-inactive-li\" href=\"javascript:void(0)\" onclick=\"\">" + this.options.groupInacitveText + "</a>");
+				groupInactiveLiElement.append(groupInactiveAElement);
+				groupButton.append(groupInactiveLiElement);
+				element.append(groupButton);
+			}
 			var table = $('<table class="table responsivetable sortable_div_container" id="table_' + this.elementId + '"></table>');
 			var thead = $('<thead id="table_head_' + this.elementId + '" class="sortable_Thead_Style"></thead>');
 			var theadTr = $('<tr class="sortable_Thead_Tr_Style"></tr>');
@@ -236,9 +298,31 @@
 			var tbody = $('<tbody id="table_body_' + this.elementId + '"  class="sortable_Tbody_Style"></tbody>');
 			table.append(tbody);
 			this.tableBodyElement = tbody;
-			element.append(alertMessageDiv);
-			element.append(successMessageDiv);
 			element.append(table);
+			if (this.options.groupMode) {
+				var table_inactive = $('<table class="table responsivetable sortable_div_container" id="table_' + this.elementId + '_inactive"></table>');
+				var thead_inactive = $('<thead id="table_head_' + this.elementId + '_inactive" class="sortable_Thead_Style"></thead>');
+				var theadTr_inactive = $('<tr class="sortable_Thead_Tr_Style"></tr>');
+				thead_inactive.append(theadTr_inactive);
+				table_inactive.append(thead_inactive);
+				if (this.options.batchMode) {
+					var checkAllBox_inactive = $('<th class="sortable_CheckBox_Style"><div><input type="checkbox" class="checkAll_inactive" id="check_all_' + this.elementId + '"/></div></th>');
+					theadTr_inactive.append(checkAllBox_inactive);
+				}
+				var codeDescHead_inactive = "";
+				if (this.options.keyValueMode) {
+					codeDescHead_inactive = '<th class="sortable_Code_Style">' + this.options.codeText + '</th><th class="sortable_Descrption_Style">' + this.options.descrptionText + '</th>';
+				} else {
+					codeDescHead_inactive = '<th class="sortable_Descrption_only_Style">' + this.options.descrptionText + '</th>';
+				}
+				var otherHead_inactive = $('<th class="sortable_CheckBox_Style">' + this.options.noText + '</th>' + codeDescHead_inactive + '<th class="sortable_Operation_Style">' + this.options.operationText + '</th>');
+				theadTr_inactive.append(otherHead_inactive);
+				var tbody_inactive = $('<tbody id="table_body_' + this.elementId + '_inactive"  class="sortable_Tbody_Style"></tbody>');
+				table_inactive.append(tbody_inactive);
+				element.append(table_inactive);
+				this.tableBodyInactiveElement = tbody_inactive;
+			}
+
 			this.prepareModelData();
 		},
 		/*
@@ -250,6 +334,7 @@
 				axis: "y",
 				cursor: "s-resize",
 				opacity: 0.8,
+				connectWith: ".sortable_Tbody_Style",
 				stop: function(event, ui) {
 					that.recordNewOrder();
 					that.refreshData();
@@ -260,7 +345,12 @@
 					}
 				}
 			};
-			this.sortableObj = $(this.tableBodyElement).sortable(argOptions);
+			if (this.options.groupMode) {
+				this.sortableObj = $('#table_body_' + this.elementId + ',#table_body_' + this.elementId + '_inactive').sortable(argOptions);
+			} else {
+				this.sortableObj = $(this.tableBodyElement).sortable(argOptions);
+			}
+
 		},
 		/**
 		/* record new order in list and update the data source
@@ -289,6 +379,7 @@
 			//log new added item
 			var newAddedItems = [];
 			var tempElement = $(this.tableBodyElement);
+			var tempInactiveElement = $(this.tableBodyInactiveElement);
 			var activedDataTemp = this.activedData;
 			var inactivedDataTemp = this.inactivedData;
 			var that = this;
@@ -327,7 +418,15 @@
 						activeButtonHtml = that.getButtonHtml("act");
 					}
 					if (that.options.batchMode) {
-						checkboxHtml = "<td class=\"sortable_CheckBox_Style\"><input type=\"checkbox\" class=\"td_sortable_checkbox\" id=\"td_sortable_checkbox_" + idStr + "\"/></td>";
+						if (!that.options.groupMode) {
+							checkboxHtml = "<td class=\"sortable_CheckBox_Style\"><input type=\"checkbox\" class=\"td_sortable_checkbox\" id=\"td_sortable_checkbox_" + idStr + "\"/></td>";
+						} else {
+							if (!flag) {
+								checkboxHtml = "<td class=\"sortable_CheckBox_Style\"><input type=\"checkbox\" class=\"td_sortable_checkbox_inactive\" id=\"td_sortable_checkbox_" + idStr + "\"/></td>";
+							} else {
+								checkboxHtml = "<td class=\"sortable_CheckBox_Style\"><input type=\"checkbox\" class=\"td_sortable_checkbox\" id=\"td_sortable_checkbox_" + idStr + "\"/></td>";
+							}
+						}
 					}
 
 					var newItem = $("<tr class=\"ui-state-default sortable_Tbody_Tr_Style\" id=\"tr_sortable_item_" + that.elementId + "_" + idStr + "\">" +
@@ -338,7 +437,15 @@
 						editButtonHtml + saveButtonHtml + cancelButtonHtml + deleteButtonHtml + activeButtonHtml +
 						"<input type=\"hidden\" class=\"hid_sortable_id\" id=\"hid_sortable_id_" + idStr + "\" value=\"" + idStr + "\"/></td>" +
 						"</tr>");
-					tempElement.append(newItem);
+					if (that.options.groupMode) {
+						if (!flag) {
+							tempInactiveElement.append(newItem);
+						} else {
+							tempElement.append(newItem);
+						}
+					} else {
+						tempElement.append(newItem);
+					}
 					newAddedItems.push(newItem);
 					jqObj = $(that.element).find("#tr_sortable_item_" + that.elementId + "_" + idStr);
 				}
@@ -376,13 +483,30 @@
 					inactivedDataTemp.push($("#tr_sortable_item_" + that.elementId + "_" + idStr));
 					jqObj.addClass("ui-state-disabled");
 				}
+
+				//group mode move items
+				if (that.options.groupMode) {
+					if (!flag) {
+						tempElement.find(jqObj).remove();
+						tempInactiveElement.append(jqObj);
+					} else {
+						tempInactiveElement.find(jqObj);
+						tempElement.append(jqObj);
+					}
+				}
 				//mark item as a processed item
-				jqObj.addClass("sortable-processed");
+				if (typeof jqObj !== 'undefined' && jqObj !== null) {
+					jqObj.addClass("sortable-processed");
+				}
+
 			});
 			//delete out of data record
 			$(this.tableBodyElement).find("tr").remove(":not(.sortable-processed)");
 			$(this.tableBodyElement).find("tr").removeClass("sortable-processed");
+			$(this.tableBodyInactiveElement).find("tr").remove(":not(.sortable-processed)");
+			$(this.tableBodyInactiveElement).find("tr").removeClass("sortable-processed");
 			this.refreshItemsDisplay();
+			this.cleanCheckbox();
 			return newAddedItems;
 		},
 		/**
@@ -443,6 +567,7 @@
 										that.showAlertMessage(data.message);
 									}
 								}
+								that.recordNewOrder();
 								that.refreshData();
 							}
 						});
@@ -453,6 +578,7 @@
 						} else {
 							foundRecord.isActiveFlag = true;
 						}
+						that.recordNewOrder();
 						this.refreshData();
 					}
 				}
@@ -496,6 +622,7 @@
 										value.isActiveFlag = true;
 									}
 								});
+								that.recordNewOrder();
 								that.refreshData();
 							} else {
 								if (data.message) {
@@ -505,6 +632,7 @@
 						}
 					});
 				} else {
+					this.recordNewOrder();
 					this.refreshData();
 				}
 			}
@@ -514,9 +642,17 @@
 		 */
 		getSelectItems: function() {
 			var checkboxes = $(this.element).find("tr .td_sortable_checkbox");
+			var checkboxes_inactive = $(this.element).find("tr .td_sortable_checkbox_inactive");
 			var checkedItems = [];
 			var uncheckedItems = [];
 			$.each(checkboxes, function(i, v) {
+				if ($(v).prop("checked")) {
+					checkedItems.push($(v).parents("tr"));
+				} else {
+					uncheckedItems.push($(v).parents("tr"));
+				}
+			});
+			$.each(checkboxes_inactive, function(i, v) {
 				if ($(v).prop("checked")) {
 					checkedItems.push($(v).parents("tr"));
 				} else {
@@ -947,9 +1083,23 @@
 			var newItems = this.refreshData();
 			this.editFunction(newItems[0]);
 			this.startIndex = startIndex;
-			$(this.tableBodyElement).animate({
-				scrollTop: '800px'
-			}, 300);
+			if (this.options.groupMode) {
+				if (this.options.enableNewItem) {
+					$("#" + this.elementId + "_tab-active-li").click();
+					$(this.tableBodyElement).animate({
+						scrollTop: '800px'
+					}, 300);
+				} else {
+					$("#" + this.elementId + "_tab-inactive-li").click();
+					$(this.tableBodyInactiveElement).animate({
+						scrollTop: '800px'
+					}, 300);
+				}
+			} else {
+				$(this.tableBodyElement).animate({
+					scrollTop: '800px'
+				}, 300);
+			}
 		},
 		/**
 		 *Get a new json data
@@ -983,6 +1133,24 @@
 				this.exitEditModeButtonsStatusDelegate(trItem);
 			}
 
+		},
+		groupButtonClick: function(isAcitveButtonClicked) {
+			if (isAcitveButtonClicked) {
+				$("#" + this.elementId + "_tab-inactive-li").parent().removeClass("r-tabs-state-active");
+				$("#" + this.elementId + "_tab-inactive-li").parent().addClass("r-tabs-state-default");
+				$("#" + this.elementId + "_tab-active-li").parent().addClass("r-tabs-state-active");
+				$("#" + this.elementId + "_tab-active-li").parent().removeClass("r-tabs-state-default");
+				$('#table_' + this.elementId).show().removeClass("hide");
+				$('#table_' + this.elementId + '_inactive').hide().addClass("hide");
+			} else {
+				$("#" + this.elementId + "_tab-inactive-li").parent().addClass("r-tabs-state-active");
+				$("#" + this.elementId + "_tab-inactive-li").parent().removeClass("r-tabs-state-default");
+				$("#" + this.elementId + "_tab-active-li").parent().removeClass("r-tabs-state-active");
+				$("#" + this.elementId + "_tab-active-li").parent().addClass("r-tabs-state-default");
+				$('#table_' + this.elementId).hide().addClass("hide");
+				$('#table_' + this.elementId + '_inactive').show().removeClass("hide");
+			}
+			this.cleanCheckbox();
 		},
 		refreshItemsDisplay: function() {
 			this.sortableObj.sortable("option", "items", "tr");
@@ -1022,12 +1190,26 @@
 					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_saveItem hide " + buttonClass + "\" value=\"" + this.options.saveButtonText + "\"/>";
 					break;
 				case "can":
-					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_cancelItem hide " + buttonClass + "\" value=\"" + this.options.cancelButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"btn-primary btn-danger " + this.elementId + "_cancelItem hide " + buttonClass + "\" value=\"" + this.options.cancelButtonText + "\"/>";
 					break;
 				default:
 					break;
 			}
 			return sHtml;
+		},
+		cleanCheckbox: function() {
+			var checkboxes = $(this.element).find("tr .td_sortable_checkbox");
+			var checkboxes_inactive = $(this.element).find("tr .td_sortable_checkbox_inactive");
+			var checkAllButton_inactive = $(this.element).find(".checkAll_inactive");
+			var checkAllButton = $(this.element).find(".checkAll");
+			checkAllButton_inactive.prop("checked", false);
+			checkAllButton.prop("checked", false);
+			$.each(checkboxes, function(i, v) {
+				$(v).prop("checked", false);
+			});
+			$.each(checkboxes_inactive, function(i, v) {
+				$(v).prop("checked", false);
+			});
 		},
 		prepareModelData: function() {
 			//add id to every records
