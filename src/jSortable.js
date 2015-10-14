@@ -321,6 +321,7 @@
 				table_inactive.append(tbody_inactive);
 				element.append(table_inactive);
 				this.tableBodyInactiveElement = tbody_inactive;
+				table_inactive.hide().addClass("hide");
 			}
 
 			this.prepareModelData();
