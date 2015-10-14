@@ -568,8 +568,11 @@
 										that.showAlertMessage(data.message);
 									}
 								}
-								that.recordNewOrder();
 								that.refreshData();
+								if (that.options.groupMode) {
+									that.recordNewOrder();
+									that.refreshData();
+								}
 							}
 						});
 					} else {
@@ -579,8 +582,11 @@
 						} else {
 							foundRecord.isActiveFlag = true;
 						}
-						that.recordNewOrder();
-						this.refreshData();
+						that.refreshData();
+						if (that.options.groupMode) {
+							that.recordNewOrder();
+							that.refreshData();
+						}
 					}
 				}
 			} else {
@@ -623,8 +629,11 @@
 										value.isActiveFlag = true;
 									}
 								});
-								that.recordNewOrder();
 								that.refreshData();
+								if (that.options.groupMode) {
+									that.recordNewOrder();
+									that.refreshData();
+								}
 							} else {
 								if (data.message) {
 									that.showAlertMessage(data.message);
@@ -633,8 +642,11 @@
 						}
 					});
 				} else {
-					this.recordNewOrder();
-					this.refreshData();
+					that.refreshData();
+					if (that.options.groupMode) {
+						that.recordNewOrder();
+						that.refreshData();
+					}
 				}
 			}
 		},
@@ -1096,6 +1108,8 @@
 						scrollTop: '800px'
 					}, 300);
 				}
+				this.recordNewOrder();
+				this.refreshData();
 			} else {
 				$(this.tableBodyElement).animate({
 					scrollTop: '800px'
@@ -1211,6 +1225,8 @@
 			$.each(checkboxes_inactive, function(i, v) {
 				$(v).prop("checked", false);
 			});
+			this.selectNumber = 0;
+			this.batchModeButtonStatus();
 		},
 		prepareModelData: function() {
 			//add id to every records
