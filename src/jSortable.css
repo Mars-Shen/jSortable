@@ -21,8 +21,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.sortable_Descrption_only_Style{
-	width: 68%;
+
+.sortable_Descrption_only_Style {
+    width: 68%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -77,6 +78,7 @@
 
 .sortable_button_group_default {
     padding-left: 0;
+    float: left;
 }
 
 
@@ -89,6 +91,7 @@
 
 .sortable_div_container {
     width: 100%;
+    display: inline-table;
 }
 
 .ui-state-disabled {
@@ -136,7 +139,6 @@ ul {
     display: inline-block;
     position: relative;
     margin-bottom: 0;
-    float: left;
 }
 
 .action-menu li {
@@ -230,8 +232,9 @@ th {
     color: #000;
     text-shadow: 0 1px 0 #fff;
     opacity: 0.2;
-    filter: alpha(opacity = 20);
+    filter: alpha(opacity=20);
 }
+
 button.close {
     padding: 0;
     cursor: pointer;
@@ -239,6 +242,7 @@ button.close {
     border: 0;
     -webkit-appearance: none;
 }
+
 .omdwebErrorMsg {
     margin: 1em 0;
     padding: 1em 1em 1em 32px;
@@ -253,7 +257,7 @@ button.close {
     border: 1px solid #d5d9d8;
 }
 
- .r-tabs-tab {
+.r-tabs-tab {
     width: 13.65%;
     vertical-align: bottom;
     position: relative;
@@ -269,10 +273,12 @@ button.close {
     border-right: 1px solid #d5d9d8;
     border-left: 1px solid #d5d9d8;
 }
+
 .r-tabs-nav {
     margin: 0;
     padding: 0;
 }
+
 .r-tabs-nav .r-tabs-tab {
     position: relative;
     top: 1px;
@@ -293,7 +299,6 @@ button.close {
     margin-bottom: 0;
     background-color: transparent;
 }
-
 
 .r-tabs-nav .r-tabs-anchor {
     margin-bottom: 3px;
