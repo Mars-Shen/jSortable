@@ -45,7 +45,8 @@
 			sortJsonData: [], //table's data array, json based. [{index:,key:,isActiveFlag:,value:}].
 			activeButton: true, //show active/inactive button or not, default is true.
 			inlineActiveButton: false, //show inline active/inactive button or not, default is true.
-			activeButtonText: "Active/Inactive", //text on active button.
+			activeButtonText: "Active", //text on active button.
+			deactiveButtonText: "Deactive",
 			//batch job group
 			batchMode: true, //show checkbox or not, default is true.
 			//edit mode group
@@ -1155,6 +1156,8 @@
 				$("#" + this.elementId + "_tab-inactive-li").parent().addClass("r-tabs-state-default");
 				$("#" + this.elementId + "_tab-active-li").parent().addClass("r-tabs-state-active");
 				$("#" + this.elementId + "_tab-active-li").parent().removeClass("r-tabs-state-default");
+				$("#" + this.elementId + "_acitveInactiveItems").val(this.options.deactiveButtonText);
+				$("." + this.elementId + "_acitveInactiveItem").val(this.options.deactiveButtonText);
 				$('#table_' + this.elementId).show().removeClass("hide");
 				$('#table_' + this.elementId + '_inactive').hide().addClass("hide");
 			} else {
@@ -1162,6 +1165,8 @@
 				$("#" + this.elementId + "_tab-inactive-li").parent().removeClass("r-tabs-state-default");
 				$("#" + this.elementId + "_tab-active-li").parent().removeClass("r-tabs-state-active");
 				$("#" + this.elementId + "_tab-active-li").parent().addClass("r-tabs-state-default");
+				$("#" + this.elementId + "_acitveInactiveItems").val(this.options.activeButtonText);
+				$("." + this.elementId + "_acitveInactiveItem").val(this.options.activeButtonText);
 				$('#table_' + this.elementId).hide().addClass("hide");
 				$('#table_' + this.elementId + '_inactive').show().removeClass("hide");
 			}
@@ -1176,10 +1181,10 @@
 			var buttonClass = "sortable_button_default btn " + this.options.buttonClass;
 			switch (type) {
 				case "acts":
-					sHtml = "<li><input type=\"button\" class=\"btn-inactive " + buttonClass + "\" id=\"" + this.elementId + "_acitveInactiveItems\" value=\"" + this.options.activeButtonText + "\"/></li>";
+					sHtml = "<li><input type=\"button\" class=\"btn-inactive " + buttonClass + "\" id=\"" + this.elementId + "_acitveInactiveItems\" value=\"" + this.options.deactiveButtonText + "\"/></li>";
 					break;
 				case "act":
-					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_acitveInactiveItem " + buttonClass + "\" value=\"" + this.options.activeButtonText + "\"/>";
+					sHtml = "<input type=\"button\" class=\"btn-primary " + this.elementId + "_acitveInactiveItem " + buttonClass + "\" value=\"" + this.options.deactiveButtonText + "\"/>";
 					break;
 				case "add":
 					sHtml = "<li><input type=\"button\" class=\"btn-primary " + buttonClass + "\" id=\"" + this.elementId + "_addItem\" value=\"" + this.options.addButtonText + "\"/></li>";
