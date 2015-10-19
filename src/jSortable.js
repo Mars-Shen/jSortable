@@ -386,8 +386,8 @@
 			var inactivedDataTemp = this.inactivedData;
 			var that = this;
 			$.each(this.options.sortJsonData, function(index, v) {
-				var valueStr = $.trim(v.value);
-				var keyStr = $.trim(v.key);
+				var valueStr = that.escapeHtml($.trim(v.value));
+				var keyStr = that.escapeHtml($.trim(v.key));
 				var idStr = $.trim(v.id);
 				var flag = v.isActiveFlag;
 				var vIndex = $.trim(v.index);
@@ -1315,6 +1315,19 @@
 				}
 				return 1;
 			};
+		},
+		escapeHtml: function(string) {
+			var entityMap = {
+				"&": "&amp;",
+				"<": "&lt;",
+				">": "&gt;",
+				'"': '&quot;',
+				"'": '&#39;',
+				"/": '&#x2F;'
+			};
+			return String(string).replace(/[&<>"'\/]/g, function(s) {
+				return entityMap[s];
+			});
 		},
 	};
 
