@@ -45,8 +45,8 @@
 			sortJsonData: [], //table's data array, json based. [{index:,key:,isActiveFlag:,value:}].
 			activeButton: true, //show active/inactive button or not, default is true.
 			inlineActiveButton: false, //show inline active/inactive button or not, default is true.
-			activeButtonText: "Active", //text on active button.
-			deactiveButtonText: "Deactive",
+			activeButtonText: "ACTIVATE", //text on active button.
+			deactiveButtonText: "DE-ACTIVATE",
 			//batch job group
 			batchMode: true, //show checkbox or not, default is true.
 			//edit mode group
